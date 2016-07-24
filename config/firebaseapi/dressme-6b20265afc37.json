@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "dressme-84bf9",
+  "private_key_id": "6b20265afc374241b38f9893f7e18f04b1a0c028",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDPUcwA1rSbwZvt\nHIxzvkGudH5q3y13FQVYGMospiNPtn5igRjKdUGqrXZ8x237RR0/5n34FHR9AUkv\nLerWVQWITOg1j0qzOlbMmzm6jUVhHfECIkNAvBp3jl8GZi9LgAnFq52omes8VsMu\n6tLqtXpCNrv8SvGIbNpJHujb5SmmYcdMWlk2jTMsmleX4ZZarZqpGmOGtWlUTKdK\njk8CfWDnmTrAE3Nxb61DtDrqAOFfPpR1e1S8OJe2rJDmxUVeqHsN18qWKf6DC3zj\nwsd0WsGkVPVxEYu7T94fscf5Jnolo4vrEFsJvfkajYdLoU5pz9fqSYN8wh+OsSHr\nIgbKR7uDAgMBAAECggEAJk1qb007mPswH6KCoG+qGt0S7hPFhpavohMSZyVaqMOC\nnhhTyDPZqfraRTtjKmUefkvLQiYlT2MJbloBZQ/YMdJjpGGQ34QLvUmAZOLsyoCJ\nomdKHY+jJCt9iuUeH8jMBWUrf5bQSxmMfgKMbSiSKeGK4ZXHAfl6ar/3LYktJLve\nv7dcLW6J6aepcNT3f4JJ8bP14gC6UQZwSgyObDFJ6oAqV2mbhbCxpcYCYPym2ciB\nR/eAQ9VAYuRLxeOM2ayDJwuHsSmipjNR7Un38ZQqukTG1+wcWPoqS+w7AGxhrcKF\n4QoZeRZQMKfuqPFBJYWF5DmEZov8EWgKyxmrFk2DAQKBgQDpxJYcUKwewpYFNsyr\neQFYPQaFb8XZzPEeymVzdAr857RjNZf3AKOpUmdWBCgKlQu4zrqvgliqsY/e1qKw\nkE5UKD1OwxwU89AjQY82O11Hg4N2gUSYU0SVsW/CCKnvfwFOgIvAIq/W1HOElmYA\nfd62uobr5kgyWwgfFZK96hUgIQKBgQDjCUlbU8QAMoEVuwP+/+l1gQLgldLMoyp0\nG8EphCKYL2ElL+gZa+MeG5f9st7Y2kfvr1zCwX8WCNGfqifET0vB161JEQSHX+oS\n1XRS0WMKsfRmkK3SkcUE0DlAHHohDz7KaDwoflv/c67053gm9bIiwajedTs0Czt8\nYfCUvNV3IwKBgQCB5BDAlPa+dMKlDQj2clsT63y3Ih8eYSjNQgrS9vSwCBMMWRgi\nUAGgMMBoZBDXqG+F9aB3qwaXeegGGt71Gonbayx9mh39amgJXwEzUhMHjIS8kSFL\nPmFKh/ggKW47PCe+teBxFxT7WrsBPgxZU5cvkz8qzp7pE/nUQ8lwqyOn4QKBgBOx\nuYhPkuAFgYcWCvmyz1ifEVXUCU4xFTyvL6lfSfTznzSvnC2gWzpAYIXkX0pmXPkg\nuCY4zMJnj2+PPhXcXxD4mZKOBFuN6Wsq0wVgHnxOBYpkIH/0nyeUvHKgRcPaY7MB\nKb7Ff0uAiHu8HIMcqxAyxmhNuQ4Br25RvKHaY5YLAoGAVpiNE0J47epcip7uYf59\nerVJEpPwjKfWOJLYlW/VJuEetePidFE51o+7SIiP67FFU3bm706zUBVUi0ptTpbV\niyH4cDE9ivLTrAXrbl+P9ltobS9+IRlPq4ajQIxe6szEi+xhm3g7IZOxnFlMlApe\nlv3z6p9tPXuXmIqL3P00F+U=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dressmeservice@dressme-84bf9.iam.gserviceaccount.com",
+  "client_id": "106436008141739746356",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dressmeservice%40dressme-84bf9.iam.gserviceaccount.com"
+}
