@@ -62,7 +62,7 @@ router.use(function(req, res, next) {
 						});
 					});
 
-					res.status(200).send('OK')
+					res.json({"id": idNewOccasion, "msg": "OK"});
 				}
 			});
 		})
