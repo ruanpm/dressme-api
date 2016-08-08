@@ -12,10 +12,6 @@ var connectionString = 'mongodb://localhost:27017' + dbName;
 mongoose.connect(connectionString);*/
 
 
-
-
-
-
 //configure body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

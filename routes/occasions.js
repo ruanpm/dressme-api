@@ -2,7 +2,6 @@
 var express = require('express');
 var firebase = require('../config/firebaseapi/myfirebase')
 
-
 var router = express.Router();
 
 //TEST - used to allow access from diferent IP locations
@@ -12,7 +11,6 @@ router.use(function(req, res, next) {
   next();
 });
 
-
 	//ROUTE
 	router.route('/occasions')
 		//CREATE NEW OCCASION
@@ -20,9 +18,11 @@ router.use(function(req, res, next) {
 
 			console.log('Start: NEW OCCASION CREATION');
 
+			var test = firebase.storage();
+
 			var db = firebase.database();
 			var ref = db.ref("occasions");
-
+ 
 			console.log(req.body);
 
 			//New Occasion
@@ -39,31 +39,33 @@ router.use(function(req, res, next) {
 			}, function(error){
 				if(error){
 					console.log(error);
-					res.status(406);
+					res.sendStatus(500);
 				}
 				else{
-					res.status(200);
-				}
-			});
+					//This is the just created occasion id
+					var idNewOccasion = newOccasion.key;
+					console.log("NEW OCCASION ID: " + idNewOccasion);
 
-			//Add new Looks inside Occasion
-			var looks = req.body.looks;
-			looks.forEach(function(look) {
-				//console.log(look);
-				var newLook = newOccasion.child("looks").push({
-					picture: look.picture,
-				  	like: look.like,
-				  	dislike: look.dislike,
-				  	desc: look.desc
-				}, function(error){
-					if(error){
-						console.log(error);
-						res.status(406);
-					}
-					else{
-						res.status(200);
-					}
-				});
+					//If could create the Occasion 
+					//add new Looks inside it
+					var looks = req.body.looks;
+					looks.forEach(function(look) {
+						//console.log(look);
+						var newLook = newOccasion.child("looks").push({
+							picture: look.picture,
+						  	like: look.like,
+						  	dislike: look.dislike,
+						  	desc: look.desc
+						}, function(error){
+							if(error){
+								console.log(error);
+								res.sendStatus(500);
+							}
+						});
+					});
+
+					res.sendStatus(200);
+				}
 			});
 		})
 
