@@ -125,8 +125,9 @@ router.use(function(req, res, next) {
 			  picture: req.body.picture,
 			  looks: req.body.looks
 			}, function(error){
-				if(error)
+				if(error){
 					console.log(error);
+				}
 				res.status(200);
 			});
 		})
