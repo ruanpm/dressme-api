@@ -135,6 +135,7 @@ router.use(function(req, res, next) {
 		//DELETE SPECIFIC OCCASION
 		.delete(function(req, res) {
 
+//test
 			console.log('Start: DELETE SPECIFIC OCCASION');
 
 			//Get a database reference to the occasion
