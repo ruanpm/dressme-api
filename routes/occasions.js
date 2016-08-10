@@ -31,8 +31,7 @@ router.use(function(req, res, next) {
 			  location: req.body.location,
 			  date: req.body.date,
 			  time: req.body.time,
-			  url: req.body.url,
-			  picture: req.body.picture,
+			  url: req.body.url
 			  //looks: req.body.looks
 			}, function(error){
 				if(error){
@@ -50,7 +49,6 @@ router.use(function(req, res, next) {
 					looks.forEach(function(look) {
 						//console.log(look);
 						var newLook = newOccasion.child("looks").push({
-							picture: look.picture,
 						  	like: look.like,
 						  	dislike: look.dislike,
 						  	desc: look.desc
@@ -122,7 +120,6 @@ router.use(function(req, res, next) {
 			  date: req.body.date,
 			  time: req.body.time,
 			  url: req.body.url,
-			  picture: req.body.picture,
 			  looks: req.body.looks
 			}, function(error){
 				if(error){
