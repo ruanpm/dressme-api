@@ -24,7 +24,7 @@ router.use(function(req, res, next) {
 			console.log(req.body);
 
 			var idNewOccasion = 0;
-			var listIdLooks = [];
+			var listRespLooks = [];
 			var countItLooks = 0;
 
 			//New Occasion
@@ -55,7 +55,8 @@ router.use(function(req, res, next) {
 						var newLook = newOccasion.child("looks").push({
 						  	like: look.like,
 						  	dislike: look.dislike,
-						  	desc: look.desc
+						  	desc: look.desc,
+						  	picture: look.picture
 						}, function(error){
 							if(error){
 								countItLooks++;
@@ -64,23 +65,23 @@ router.use(function(req, res, next) {
 
 								if(countItLooks === looks.length){
 									//return the new occasion id and its looks ids
-									res.json({"id": idNewOccasion, "looksId": listIdLooks, "msg": "OK"});	
+									res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
 								}
 							}
 							else{
+								//console.log(look);
 								countItLooks++;
 								//Insert new look id into a list
-								listIdLooks.push(newLook.key);
+								listRespLooks.push({ "id": newLook.key, "picture": look.picture });
 
 								if(countItLooks === looks.length){
 									//return the new occasion id and its looks ids
-									res.json({"id": idNewOccasion, "looksId": listIdLooks, "msg": "OK"});	
+									res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
 								}
 							}
 						});
 					});
-					
-							}
+				}
 			});
 		})
 
