@@ -23,6 +23,10 @@ router.use(function(req, res, next) {
  
 			console.log(req.body);
 
+			var idNewOccasion = 0;
+			var listIdLooks = [];
+			var countItLooks = 0;
+
 			//New Occasion
 			var newOccasion = ref.push({
 			  name: req.body.name,
@@ -40,7 +44,7 @@ router.use(function(req, res, next) {
 				}
 				else{
 					//This is the just created occasion id
-					var idNewOccasion = newOccasion.key;
+					idNewOccasion = newOccasion.key;
 					console.log("NEW OCCASION ID: " + idNewOccasion);
 
 					//If could create the Occasion 
@@ -54,14 +58,29 @@ router.use(function(req, res, next) {
 						  	desc: look.desc
 						}, function(error){
 							if(error){
+								countItLooks++;
 								console.log(error);
-								 res.status(500).send('Internal Server Error')
+								res.status(500).send('Internal Server Error');
+
+								if(countItLooks === looks.length){
+									//return the new occasion id and its looks ids
+									res.json({"id": idNewOccasion, "looksId": listIdLooks, "msg": "OK"});	
+								}
+							}
+							else{
+								countItLooks++;
+								//Insert new look id into a list
+								listIdLooks.push(newLook.key);
+
+								if(countItLooks === looks.length){
+									//return the new occasion id and its looks ids
+									res.json({"id": idNewOccasion, "looksId": listIdLooks, "msg": "OK"});	
+								}
 							}
 						});
 					});
-
-					res.json({"id": idNewOccasion, "msg": "OK"});
-				}
+					
+							}
 			});
 		})
 
@@ -70,7 +89,7 @@ router.use(function(req, res, next) {
 
 			console.log('Start: GET ALL OCCASIONS');
 
-			// Get a database reference to our posts
+			// Get a database reference to our occasions
 			var db = firebase.database();
 			var ref = db.ref('occasions');
 
@@ -81,6 +100,25 @@ router.use(function(req, res, next) {
 			}, function (errorObject) {
 			  console.log('The read failed: ' + errorObject.code);
 			});
+		})
+
+		//DELETE ALL OCCASIONS
+		.delete(function(req, res) {
+
+			console.log('Start: DELETE ALL OCCASIONS');
+
+			// Get a database reference to our occasions
+			var db = firebase.database();
+			var ref = db.ref('occasions');
+
+			ref.remove(
+				function(error) {
+				  if (error) {
+				     res.status(204).send('Internal Server Error')
+				  } else {
+				    res.status(200);
+				  }
+				});
 		})
 
 	//ROUTE
@@ -139,15 +177,14 @@ router.use(function(req, res, next) {
 			var db = firebase.database();
 			var ref = db.ref("occasions/" + req.params.id);
 
-			var onComplete = function(error) {
-			  if (error) {
-			    res.status(204);
-			  } else {
-			    res.status(200);
-			  }
-			};
-
-			ref.remove(onComplete)
+			ref.remove(
+				function(error) {
+				  if (error) {
+				    res.status(204);
+				  } else {
+				    res.status(200);
+				  }
+				});
 		});
 
 module.exports = router;
