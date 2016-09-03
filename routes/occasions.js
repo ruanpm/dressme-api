@@ -95,9 +95,15 @@ router.use(function(req, res, next) {
 			var ref = db.ref('occasions');
 
 			// Attach an asynchronous callback to read the data at our posts reference
-			ref.on('value', function(snapshot) {
-			  //console.log(snapshot.val());
-			  res.json(snapshot.val());
+			ref.on('value', function(response) {
+
+			  if(response.val() === null){
+			  	res.json(JSON.parse('{}'));
+			  }
+			  else{
+			  	res.json(response.val());
+			  }
+			  
 			}, function (errorObject) {
 			  console.log('The read failed: ' + errorObject.code);
 			});
