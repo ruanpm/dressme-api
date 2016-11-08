@@ -39,7 +39,7 @@ router.use(function(req, res, next) {
 			}, function(error) {
 				if(error) {
 					console.log(error);
-					res.status(500).send('Internal Server Error')
+					res.status(500).send('Internal Server Error');
 				}
 				else {
 					//This is the just created occasion id
