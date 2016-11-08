@@ -51,7 +51,7 @@ router.use(function(req, res, next) {
 					var looks = req.body.looks;
 
 					//If it has looks then add along
-					if(looks) {
+					if(looks.length) {
 						looks.forEach(function(look) {
 							//console.log(look);
 							var newLook = newOccasion.child("looks").push({
