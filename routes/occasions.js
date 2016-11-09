@@ -85,13 +85,13 @@ router.use(function(req, res, next) {
 						});
 					}
 					else {
-						var newLook = newOccasion.child("looks").push(null, function(error) {
+						var newLook = newOccasion.child("looks").push([], function(error) {
 							if(error) {
 								console.log(error);
 								res.status(500).send('Internal Server Error');
 							}
 							else {
-								res.json({"id": idNewOccasion, "looks": null, "msg": "OK"});
+								res.json({"id": idNewOccasion, "looks": [], "msg": "OK"});
 							}
 						});
 					}
