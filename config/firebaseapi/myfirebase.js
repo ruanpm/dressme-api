@@ -1,9 +1,8 @@
-var firebase = require("firebase");
+var admin = require("firebase-admin");
 
-//Firebase
-firebase.initializeApp({
-  databaseURL: 'https://dressme-84bf9.firebaseio.com',
-  serviceAccount: './dressme-6b20265afc37.json'
+admin.initializeApp({
+  credential: admin.credential.cert("./to/dressme-c8474-firebase-adminsdk-xxwt8-eb8ec14e67.json"),
+  databaseURL: "https://dressme-c8474.firebaseio.com"
 });
 
 module.exports = firebase;

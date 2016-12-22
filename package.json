@@ -6,14 +6,12 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "4.13.3"
+    "body-parser": "~1.0.0",
+    "express": "~4.2.0",
+    "firebase": "^3.0.5",
+    "firebase-admin": "^4.0.4"
   },
   "engines": {
     "node": "4.4.2"
-  },
-  "dependencies": {
-    "body-parser": "~1.0.0",
-    "express": "~4.2.0",
-    "firebase": "^3.0.5"
   }
 }

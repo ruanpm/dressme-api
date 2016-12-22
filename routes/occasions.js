@@ -103,7 +103,7 @@ router.use(function(req, res, next) {
 			  else{
 			  	res.json(response.val());
 			  }
-			  
+
 			}, function (errorObject) {
 			  console.log('The read failed: ' + errorObject.code);
 			});
@@ -193,5 +193,31 @@ router.use(function(req, res, next) {
 				  }
 				});
 		});
+
+	//ROUTE
+	router.route('/reactions')
+		//CREATE NEW OCCASION
+		.post(function(req, res) {
+
+			console.log('Start: NEW REACTION');
+
+			var db = firebase.database();
+			var ref = db.ref("occasions/<idoccasion>/looks/<idlook>");
+ 
+			console.log(req.body);
+
+			var newReaction = ref.child("reactions").push({
+				user:    req.body.userid,
+				like:    req.body.like,
+				comment: req.body.comment
+			}, function(error){
+				if (error) {
+				    res.status(500).send('Internal Server Error')
+				} else {
+					res.status(200);
+				}
+			});
+	}
+				
 
 module.exports = router;
