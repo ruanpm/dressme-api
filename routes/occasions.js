@@ -36,13 +36,12 @@ router.use(function(req, res, next) {
 			  date: req.body.date,
 			  time: req.body.time,
 			  url: req.body.url
-			  //looks: req.body.looks
-			}, function(error){
-				if(error){
+			}, function(error) {
+				if(error) {
 					console.log(error);
-					 res.status(500).send('Internal Server Error')
+					res.status(500).send('Internal Server Error');
 				}
-				else{
+				else {
 					//This is the just created occasion id
 					idNewOccasion = newOccasion.key;
 					console.log("NEW OCCASION ID: " + idNewOccasion);
@@ -50,37 +49,52 @@ router.use(function(req, res, next) {
 					//If could create the Occasion 
 					//add new Looks inside it
 					var looks = req.body.looks;
-					looks.forEach(function(look) {
-						//console.log(look);
-						var newLook = newOccasion.child("looks").push({
-						  	like: look.like,
-						  	dislike: look.dislike,
-						  	desc: look.desc,
-						  	picture: look.picture
-						}, function(error){
-							if(error){
-								countItLooks++;
+
+					//If it has looks then add along
+					if(looks.length) {
+						looks.forEach(function(look) {
+							//console.log(look);
+							var newLook = newOccasion.child("looks").push({
+							  	like: look.like,
+							  	dislike: look.dislike,
+							  	desc: look.desc,
+							  	picture: look.picture
+							}, function(error){
+								if(error){
+									countItLooks++;
+									console.log(error);
+									res.status(500).send('Internal Server Error');
+
+									if(countItLooks === looks.length){
+										//return the new occasion id and its looks ids
+										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
+									}
+								}
+								else{
+									//console.log(look);
+									countItLooks++;
+									//Insert new look id into a list
+									listRespLooks.push({ "id": newLook.key, "picture": look.picture });
+
+									if(countItLooks === looks.length){
+										//return the new occasion id and its looks ids
+										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
+									}
+								}
+							});
+						});
+					}
+					else {
+						var newLook = newOccasion.child("looks").push([], function(error) {
+							if(error) {
 								console.log(error);
 								res.status(500).send('Internal Server Error');
-
-								if(countItLooks === looks.length){
-									//return the new occasion id and its looks ids
-									res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
-								}
 							}
-							else{
-								//console.log(look);
-								countItLooks++;
-								//Insert new look id into a list
-								listRespLooks.push({ "id": newLook.key, "picture": look.picture });
-
-								if(countItLooks === looks.length){
-									//return the new occasion id and its looks ids
-									res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
-								}
+							else {
+								res.json({"id": idNewOccasion, "looks": [], "msg": "OK"});
 							}
 						});
-					});
+					}
 				}
 			});
 		})
