@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 //var mongoose = require('mongoose')
 var occasions = require('./routes/occasions'); //routes are defined here
+var upload = require('./routes/upload'); //routes are defined here
 var app = express(); //Create the Express app
 
 //connect to our database
@@ -16,10 +17,7 @@ mongoose.connect(connectionString);*/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-app.use('/api', occasions); //This is our route middleware
-
-
-
-
+app.use('/api', occasions);
+app.use('/api', upload);
 
 module.exports = app;

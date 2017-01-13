@@ -51,7 +51,7 @@ router.use(function(req, res, next) {
 					var looks = req.body.looks;
 
 					//If it has looks then add along
-					if(looks.length) {
+					if(looks !== null && looks.length) {
 						looks.forEach(function(look) {
 							//console.log(look);
 							var newLook = newOccasion.child("looks").push({
@@ -84,7 +84,7 @@ router.use(function(req, res, next) {
 							});
 						});
 					}
-					else {
+					else { //Insert empty list of looks
 						var newLook = newOccasion.child("looks").push([], function(error) {
 							if(error) {
 								console.log(error);
