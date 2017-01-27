@@ -26,14 +26,13 @@ var rootPath = '/upload';
 
 		    if(file != null){
 
-		      var s3 = new AWS.S3();	
+		      var s3 = new AWS.S3();
 			  var imageName = req.body.name;
 			  var bucket = "dressmeapp";
 		      
 		      console.log("chamou o upload service bucket " + bucket);  
 		      
 		      var buffer = new Buffer(file.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-
 
 		  		var data = {
 				    Key: imageName, 

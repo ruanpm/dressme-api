@@ -23,6 +23,19 @@ router.use(function(req, res, next) {
  
 			console.log(req.body);
 
+			//If it came from Win App then normalize looks
+			if(req.body.win_app !== null && req.body.win_app == true){
+				console.log('HANDLE IT');
+				var normalizedListLooks = [];
+				req.body.looks = JSON.parse(req.body.looks);
+
+				for(var i = 0; i < req.body.looks.length; i++){
+					normalizedListLooks.push(JSON.parse(req.body.looks[i]));
+				}
+
+				req.body.looks = normalizedListLooks;
+			}
+
 			var idNewOccasion = 0;
 			var listRespLooks = [];
 			var countItLooks = 0;
@@ -58,7 +71,8 @@ router.use(function(req, res, next) {
 							  	like: look.like,
 							  	dislike: look.dislike,
 							  	desc: look.desc,
-							  	picture: look.picture
+							  	picture: look.picture,
+								idForUpload: look.idForUpload
 							}, function(error){
 								if(error){
 									countItLooks++;
@@ -66,17 +80,23 @@ router.use(function(req, res, next) {
 									res.status(500).send('Internal Server Error');
 
 									if(countItLooks === looks.length){
+										console.log('LOG1')
 										//return the new occasion id and its looks ids
-										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
+										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK", "idForUpload": newLook.idForUpload});	
 									}
 								}
 								else{
 									//console.log(look);
 									countItLooks++;
+
+console.log('LOG2')
+console.log(look.idForUpload)
+
 									//Insert new look id into a list
-									listRespLooks.push({ "id": newLook.key, "picture": look.picture });
+									listRespLooks.push({ "id": newLook.key, "picture": look.picture, "idForUpload": look.idForUpload});
 
 									if(countItLooks === looks.length){
+										console.log('LOG3')
 										//return the new occasion id and its looks ids
 										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
 									}
