@@ -65,6 +65,9 @@ router.use(function(req, res, next) {
 
 					//If it has looks then add along
 					if(looks !== null && looks.length) {
+
+						console.log('ESSA FERA BIXO')
+
 						looks.forEach(function(look) {
 							//console.log(look);
 							var newLook = newOccasion.child("looks").push({
@@ -86,6 +89,7 @@ router.use(function(req, res, next) {
 									}
 								}
 								else{
+									console.log('DEU CERTO AQUi')
 									//console.log(look);
 									countItLooks++;
 

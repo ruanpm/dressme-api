@@ -14,8 +14,10 @@ mongoose.connect(connectionString);*/
 
 
 //configure body-parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded());
 
 app.use('/api', occasions);
 app.use('/api', upload);

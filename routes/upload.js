@@ -44,14 +44,13 @@ var rootPath = '/upload';
 				  s3.putObject(data, function(err, data){
 				      if (err) { 
 				        console.log(err);
-				        console.log('Error uploading data: ', data); 
+				        console.log('Error uploading data: ', data);
+				        res.status(HttpUtil.INTERNAL_SERVER_ERROR).end(); 
 				      } else {
 				        console.log('succesfully uploaded the image!');
+				     	res.status(HttpUtil.CREATED).end();
 				      }
 				  });
-
-
-		        res.status(HttpUtil.CREATED).end();
 		    } else {
 		      res.status(HttpUtil.NOT_FOUND).end();
 		    }
