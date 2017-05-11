@@ -65,7 +65,7 @@ router.use(function(req, res, next) {
 					var looks = req.body.looks;
 
 					//If it has looks then add along
-					if(look && looks.length) {
+					if(looks && looks.length) {
 
 						console.log('ESSA FERA BIXO')
 
