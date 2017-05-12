@@ -13,6 +13,20 @@ var connectionString = 'mongodb://localhost:27017' + dbName;
 mongoose.connect(connectionString);*/
 
 
+//Trying to set headers
+app.use(function(req, res, next) {
+
+	console.log('CONFIG HEADERS HERE!!!')
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  next();
+});
+
+ 
+
+
 //configure body-parser
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));

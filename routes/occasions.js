@@ -5,12 +5,15 @@ var firebase = require('../config/firebaseapi/myfirebase')
 var router = express.Router();
 
 //TEST - used to allow access from diferent IP locations
-router.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-  next();
-});
+// router.use(function(req, res, next) {
+
+// 	console.log('CONFIGURANDO HEADERS AQUI!!!!!')
+
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+//   next();
+// });
 
 	//ROUTE
 	router.route('/occasions')
@@ -41,6 +44,8 @@ router.use(function(req, res, next) {
 			var listRespLooks = [];
 			var countItLooks = 0;
 
+			console.log('CHECKPOINT 1');
+
 			//New Occasion
 			var newOccasion = ref.push({
 			  name: req.body.name,
@@ -52,10 +57,16 @@ router.use(function(req, res, next) {
 			  url: req.body.url
 			}, function(error) {
 				if(error) {
+
+					console.log('CHECKPOINT 1.5');
+
 					console.log(error);
-					res.status(500).send('Internal Server Error');
+					return res.status(500).send('Internal Server Error');
 				}
 				else {
+
+					console.log('CHECKPOINT 2');
+
 					//This is the just created occasion id
 					idNewOccasion = newOccasion.key;
 					console.log("NEW OCCASION ID: " + idNewOccasion);
@@ -64,10 +75,11 @@ router.use(function(req, res, next) {
 					//add new Looks inside it
 					var looks = req.body.looks;
 
+					console.log('LOOKS TO BE SAVED');
+					console.log(looks);
+
 					//If it has looks then add along
 					if(looks && looks.length) {
-
-						console.log('ESSA FERA BIXO')
 
 						looks.forEach(function(look) {
 							//console.log(look);
