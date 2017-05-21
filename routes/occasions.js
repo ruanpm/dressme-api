@@ -20,10 +20,7 @@ var router = express.Router();
 		//CREATE NEW OCCASION
 		.post(function(req, res) {
 
-
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-			
+  			res.setHeader('Access-Control-Allow-Origin', '*');
 
 			console.log('Start: NEW OCCASION CREATION');
 
@@ -156,7 +153,7 @@ console.log(look.idForUpload)
 			  if(response.val() === null){
 			  	res.json(JSON.parse('{}'));
 			  }
-			  else{
+			  else {
 			  	res.json(response.val());
 			  }
 

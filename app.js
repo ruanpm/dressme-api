@@ -1,9 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 //var mongoose = require('mongoose')
-var occasions = require('./routes/occasions'); //routes are defined here
-var upload = require('./routes/upload'); //routes are defined here
-var app = express(); //Create the Express app
+var occasions = require('./routes/occasions');
+var upload = require('./routes/upload'); 
+var user = require('./routes/user'); 
+var app = express();
 
 //connect to our database
 //Ideally you will obtain DB details from a config file
@@ -25,8 +26,6 @@ app.use(function(req, res, next) {
 });
 
  
-
-
 //configure body-parser
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -35,5 +34,6 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use('/api', occasions);
 app.use('/api', upload);
+app.use('/api', user);
 
 module.exports = app;
