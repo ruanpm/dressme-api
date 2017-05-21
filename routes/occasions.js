@@ -20,8 +20,6 @@ var router = express.Router();
 		//CREATE NEW OCCASION
 		.post(function(req, res) {
 
-  			res.setHeader('Access-Control-Allow-Origin', '*');
-
 			console.log('Start: NEW OCCASION CREATION');
 
 			var db = firebase.database();
@@ -117,7 +115,7 @@ console.log(look.idForUpload)
 									if(countItLooks === looks.length){
 										console.log('LOG3')
 										//return the new occasion id and its looks ids
-										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"});	
+										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"}).send();
 									}
 								}
 							});
@@ -148,12 +146,14 @@ console.log(look.idForUpload)
 			var ref = db.ref('occasions');
 
 			// Attach an asynchronous callback to read the data at our posts reference
-			ref.on('value', function(response) {
+			ref.once('value', function(response) {
 
 			  if(response.val() === null){
+			  	console.log('AINDA AQUI!!!!11111')
 			  	res.json(JSON.parse('{}'));
 			  }
 			  else {
+			  	console.log('AINDA AQUI!!!!')
 			  	res.json(response.val());
 			  }
 
