@@ -34,7 +34,7 @@ var router = express.Router();
 				}
 				else{
 					console.log('deu certo');
-					res.status(200).send();
+					res.status(200).send(token);
 				}
 			});
 		});
