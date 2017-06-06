@@ -1,6 +1,7 @@
 //var Movie = require('../models/movie');
 var express = require('express');
 var firebase = require('../config/firebaseapi/myfirebase')
+var crypto =  require('crypto');
 
 
 var router = express.Router();
@@ -14,12 +15,12 @@ var router = express.Router();
 			console.log('NEW USER');
 
 			// Generates a TOKEN for the user
-			var token = Crypto.randomBytes(48).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+			var token = crypto.randomBytes(48).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
 			var db = firebase.database();
 			var ref = db.ref("user");
 
 			/*
-			* New User
+			* New User.
 			* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
 			*/
 			var newUser = ref.push({
