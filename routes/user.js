@@ -13,12 +13,18 @@ var router = express.Router();
 
 			console.log('NEW USER');
 
+			// Generates a TOKEN for the user
+			var token = Crypto.randomBytes(48).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
 			var db = firebase.database();
 			var ref = db.ref("user");
 
-			// New User
+			/*
+			* New User
+			* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
+			*/
 			var newUser = ref.push({
-			  id_fireAuth: req.body.id_fireAuth,
+			  id_thirdAuth: req.body.id_thirdAuth,
+			  token: token,
 			  first_login: true
 			}, function(error){
 				if(error){
