@@ -54,7 +54,7 @@ var router = express.Router();
 			});
 
 			// Generates a TOKEN for the user
-			generateToken(newUser.key(), function(code, token){
+			generateToken(newUser.getKey(), function(code, token){
 				if(token) {
 					res.status(200).send(token);
 				} else {
