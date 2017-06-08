@@ -118,6 +118,13 @@ var router = express.Router();
 	router.route('/first-login')
 		.get(function(req, res) {
 
+
+			console.log('BUGADO 99')
+
+			res.setHeader('Access-Control-Allow-Origin', '*');
+
+			console.log('BUGADO 100')
+
 			// Get query string parameter value
 			var idUserFireFind = req.query.id_user_fire;
 
