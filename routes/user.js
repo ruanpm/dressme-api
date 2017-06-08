@@ -44,7 +44,7 @@ var router = express.Router();
 			* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
 			*/
 			var newUser = refUser.push({
-			  id_thirdAuth: req.body.id_thirdAuth
+			  id_thirdAuth: req.body.id_thirdAuth,
 			  first_login: true
 			}, function(error){
 				if(error){
@@ -144,7 +144,7 @@ var router = express.Router();
 								// otherwise update the attr and respond true
 								var objResponse = {
 									user_token: user_token,
-									first_login: false;
+									first_login: false
 								}
 
 								if(result.val().first_login) {
