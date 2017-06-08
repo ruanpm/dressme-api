@@ -128,23 +128,13 @@ var router = express.Router();
 			// Attach an asynchronous callback to read the data at our posts reference
 			ref_users.once("value", function(listUser) {
 
-				console.log('BUGADO 0000')
-
  				if(listUser && listUser.val() !== null) {
 
  					// Find user in the list
  					for(var idUser in listUser.val()) {
 
- 						console.log('BUGADO 1111')
-
- 						console.log(idUserFireFind)
- 						console.log(listUser.val()[idUser].id_fireAuth)
-
  						// Verifica se id do usuario auth do firebase foi encontrado
-						if(idUserFireFind === listUser.val()[idUser].id_fireAuth) {
-							console.log(listUser.val()[idUser].id_fireAuth)
-
-							console.log('BUGADAO!!')
+						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
 
 							var ref_user = db.ref("user/" + idUser);
 
@@ -162,11 +152,8 @@ var router = express.Router();
 									objResponse.first_login = true;
 								}
 
-								console.log('BUGADO 1')
-
 								// Generates a TOKEN for the user
 								generateToken(idUser, function(code, token){
-									console.log('BUGADO 2')
 									if(token) {
 										objResponse.user_token = token;
 										res.status(200).send(objResponse);
