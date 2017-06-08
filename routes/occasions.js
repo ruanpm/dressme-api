@@ -15,6 +15,18 @@ var router = express.Router();
 //   next();
 // });
 
+	// Check if the user token exists
+	function validateToken(token, callback) {
+		var db = firebase.database();
+		var refUserToken = db.ref("user_token/" + token);
+
+		// Reference user_token
+		db.ref('user_token/' + token).once('value').then(function(snapshot) {
+			callback(snapshot.val().id_user);
+  		});
+	}
+
+
 	//ROUTE
 	router.route('/occasions')
 		//CREATE NEW OCCASION
@@ -106,9 +118,6 @@ var router = express.Router();
 									//console.log(look);
 									countItLooks++;
 
-console.log('LOG2')
-console.log(look.idForUpload)
-
 									//Insert new look id into a list
 									listRespLooks.push({ "id": newLook.key, "picture": look.picture, "idForUpload": look.idForUpload});
 
@@ -140,26 +149,29 @@ console.log(look.idForUpload)
 		.get(function(req, res) {
 
 			console.log('Start: GET ALL OCCASIONS');
+			console.log(req.headers);
 
 			// Get a database reference to our occasions
 			var db = firebase.database();
-			var ref = db.ref('occasions');
 
-			// Attach an asynchronous callback to read the data at our posts reference
-			ref.once('value', function(response) {
+			validateToken(req.headers.api_token, function(idUser){
+				// If idUser is valid then the token was found
+				if(idUser) {
+					// Get all occasions linked to the user
+					db.ref('occasions').once('value', function(response) {
 
-			  if(response.val() === null){
-			  	console.log('AINDA AQUI!!!!11111')
-			  	res.json(JSON.parse('{}'));
-			  }
-			  else {
-			  	console.log('AINDA AQUI!!!!')
-			  	res.json(response.val());
-			  }
+					  if(response.val() === null){
+					  	res.json(JSON.parse('{}'));
+					  }
+					  else {
+					  	res.json(response.val());
+					  }
 
-			}, function (errorObject) {
-			  console.log('The read failed: ' + errorObject.code);
-			});
+					}, function (errorObject) {
+					  console.log('The read failed: ' + errorObject.code);
+					});
+				}
+			})
 		})
 
 		//DELETE ALL OCCASIONS

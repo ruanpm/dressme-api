@@ -12,9 +12,8 @@ var router = express.Router();
 		
 		// Create User Token and send response with this generated token
 		var db = firebase.database();
-		var refUserToken = db.ref("user_token/" + idUser);
+		var refUserToken = db.ref("user_token/" + token);
 		refUserToken.set({
-						token: token,
 						id_user: idUser
 					}, function(error){
 						if(error){
