@@ -6,6 +6,28 @@ var crypto =  require('crypto');
 
 var router = express.Router();
 
+	// Generate token and save it on 
+	function generateToken(idUser, callback) {
+		var token = crypto.randomBytes(48).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+		
+		// Create User Token and send response with this generated token
+		var refUserToken = db.ref("user_token/" + idUser);
+		refUserToken.set({
+						token: token,
+						id_user: idUser
+					}, function(error){
+						if(error){
+							console.log(error);
+							//res.status(406).send();
+							callback(406, null);
+						}
+						else{
+							//res.status(200).send(token);
+							callback(200, token);
+						}
+					});
+	}
+
 	// [ROUTE]
 	router.route('/user')
 		.post(function(req, res) {
@@ -14,29 +36,33 @@ var router = express.Router();
 
 			console.log('NEW USER');
 
-			// Generates a TOKEN for the user
-			var token = crypto.randomBytes(48).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
 			var db = firebase.database();
-			var ref = db.ref("user");
+			var refUser = db.ref("user");
 
 			/*
 			* New User.
 			* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
 			*/
-			var newUser = ref.push({
-			  id_thirdAuth: req.body.id_thirdAuth,
-			  token: token,
+			var newUser = refUser.push({
+			  id_thirdAuth: req.body.id_thirdAuth
 			  first_login: true
 			}, function(error){
 				if(error){
 					console.log(error);
 					res.status(406).send();
 				}
-				else{
-					console.log('deu certo');
-					res.status(200).send(token);
-				}
 			});
+
+			// Generates a TOKEN for the user
+			generateToken(newUser.key(), function(code, token){
+				if(token) {
+					res.status(200).send(token);
+				} else {
+					res.status(406).send(null);
+				}
+			})
+
+
 		});
 
 	// [ROUTE]
@@ -102,50 +128,49 @@ var router = express.Router();
 			ref_users.once("value", function(listUser) {
 
  				if(listUser && listUser.val() !== null) {
- 					// var notFound = false;
- 					// var count = 0;
- 					
+
  					// Find user in the list
  					for(var idUser in listUser.val()) {
 
- 						// if(notFound) {
- 						// 	res.send(200).send(false);
- 						// }
-
- 						console.log('aqui1')
-
  						// Verifica se id do usuario auth do firebase foi encontrado
 						if(idUserFireFind === listUser.val()[idUser].id_fireAuth) {
-							console.log('aqui2')
 							console.log(listUser.val()[idUser].id_fireAuth)
 
 							var ref_user = db.ref("user/" + idUser);
 
 							ref_user.once('value', function(result) {
+
 								// If it is not first login then respond false
 								// otherwise update the attr and respond true
+								var objResponse = {
+									user_token: user_token,
+									first_login: false;
+								}
 
 								if(result.val().first_login) {
-									console.log('enviou aqui 3')
 									ref_user.update({ first_login: false });
-									res.status(200).send(true);
+									objResponse.first_login = true;
+									//res.status(200).send(objResponse);
 								}
-								else {
-									console.log('enviou aqui 4')
-									res.status(200).send(false);
-								}
+
+								// Generates a TOKEN for the user
+								generateToken(idUser, function(code, token){
+									if(token) {
+										res.status(200).send(token);
+									} else {
+										res.status(406).send(null);
+									}
+								})
 							});
 						}
 					}
 				}
 				else {
-					console.log('enviou aqui 2')
 					res.status(200).send(false);
 				}
 
 			}, function (errorObject) {
 			  console.log("The read failed: " + errorObject.code);
-			  console.log('enviou aqui 1')
 			  res.status(200).send(false);
 			});
 		})
