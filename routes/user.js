@@ -153,8 +153,11 @@ var router = express.Router();
 									objResponse.first_login = true;
 								}
 
+								console.log('BUGADO 1')
+
 								// Generates a TOKEN for the user
 								generateToken(idUser, function(code, token){
+									console.log('BUGADO 2')
 									if(token) {
 										objResponse.user_token = token;
 										res.status(200).send(objResponse);
