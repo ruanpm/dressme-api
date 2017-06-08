@@ -137,9 +137,14 @@ var router = express.Router();
 
  						console.log('BUGADO 1111')
 
+ 						console.log(idUserFireFind)
+ 						console.log(listUser.val()[idUser].id_fireAuth)
+
  						// Verifica se id do usuario auth do firebase foi encontrado
 						if(idUserFireFind === listUser.val()[idUser].id_fireAuth) {
 							console.log(listUser.val()[idUser].id_fireAuth)
+
+							console.log('BUGADAO!!')
 
 							var ref_user = db.ref("user/" + idUser);
 
