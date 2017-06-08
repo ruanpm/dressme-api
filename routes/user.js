@@ -11,6 +11,7 @@ var router = express.Router();
 		var token = crypto.randomBytes(48).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
 		
 		// Create User Token and send response with this generated token
+		var db = firebase.database();
 		var refUserToken = db.ref("user_token/" + idUser);
 		refUserToken.set({
 						token: token,
