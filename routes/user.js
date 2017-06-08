@@ -118,13 +118,6 @@ var router = express.Router();
 	router.route('/first-login')
 		.get(function(req, res) {
 
-
-			console.log('BUGADO 99')
-
-			res.setHeader('Access-Control-Allow-Origin', '*');
-
-			console.log('BUGADO 100')
-
 			// Get query string parameter value
 			var idUserFireFind = req.query.id_user_fire;
 
@@ -135,10 +128,14 @@ var router = express.Router();
 			// Attach an asynchronous callback to read the data at our posts reference
 			ref_users.once("value", function(listUser) {
 
+				console.log('BUGADO 0000')
+
  				if(listUser && listUser.val() !== null) {
 
  					// Find user in the list
  					for(var idUser in listUser.val()) {
+
+ 						console.log('BUGADO 1111')
 
  						// Verifica se id do usuario auth do firebase foi encontrado
 						if(idUserFireFind === listUser.val()[idUser].id_fireAuth) {
