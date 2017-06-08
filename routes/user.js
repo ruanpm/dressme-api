@@ -144,20 +144,20 @@ var router = express.Router();
 								// If it is not first login then respond false
 								// otherwise update the attr and respond true
 								var objResponse = {
-									user_token: user_token,
+									user_token: '',
 									first_login: false
 								}
 
 								if(result.val().first_login) {
 									ref_user.update({ first_login: false });
 									objResponse.first_login = true;
-									//res.status(200).send(objResponse);
 								}
 
 								// Generates a TOKEN for the user
 								generateToken(idUser, function(code, token){
 									if(token) {
-										res.status(200).send(token);
+										objResponse.user_token = token;
+										res.status(200).send(objResponse);
 									} else {
 										res.status(406).send(null);
 									}
