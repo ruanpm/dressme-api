@@ -53,16 +53,47 @@ var router = express.Router();
 				}
 			});
 
+			var responseObj = {
+				token: '',
+				user_id: ''
+			}
+
 			// Generates a TOKEN for the user
 			generateToken(newUser.getKey(), function(code, token){
 				if(token) {
-					res.status(200).send(token);
+					responseObj.token = token;
+					responseObj.user_id = newUser.getKey();
+					res.status(200).send(responseObj);
 				} else {
 					res.status(406).send(null);
 				}
 			})
+		});
 
+	//ROUTE
+	router.route('/user/:id')
+		.put(function(req, res) {
 
+			res.setHeader('Access-Control-Allow-Origin', '*');
+
+			console.log('UPDATE USER');
+
+			var db = firebase.database();
+			var refUser = db.ref("user/" + req.params.id);
+
+			refUser.update({
+			  name: req.body.name,
+			  birthday: req.body.birthday,
+			  desc: req.body.desc,
+			  contact: req.body.contact
+			}, function(error){
+				if(error){
+					console.log(error);
+					res.status(406).send();
+				} else {
+					res.status(200).send();
+				}
+			});
 		});
 
 	// [ROUTE]
@@ -143,6 +174,7 @@ var router = express.Router();
 								// otherwise update the attr and respond true
 								var objResponse = {
 									user_token: '',
+									user_id: '',
 									first_login: false
 								}
 
@@ -155,6 +187,7 @@ var router = express.Router();
 								generateToken(idUser, function(code, token){
 									if(token) {
 										objResponse.user_token = token;
+										objResponse.user_id = idUser;
 										res.status(200).send(objResponse);
 									} else {
 										res.status(406).send(null);
