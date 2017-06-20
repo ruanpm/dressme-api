@@ -35,7 +35,7 @@ var router = express.Router();
 			res.setHeader('Access-Control-Allow-Origin', '*');
 
 			console.log('NEW USER');
-			console.log(req.body)
+			console.log(req)
 
 			var db = firebase.database();
 			var refUser = db.ref("user");
