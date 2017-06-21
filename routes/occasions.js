@@ -157,6 +157,10 @@ var router = express.Router();
 			validateToken(req.headers.api_token, function(idUser){
 				// If idUser is valid then the token was found
 				if(idUser) {
+
+					// TODO - Get occasions from the users that the user follow
+					
+
 					// Get all occasions linked to the user
 					db.ref('occasions').once('value', function(response) {
 
