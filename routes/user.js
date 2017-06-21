@@ -46,7 +46,11 @@ var router = express.Router();
 			*/
 			var newUser = refUser.push({
 			  id_thirdAuth: req.body.id_thirdAuth,
-			  first_login: true
+			  first_login: true,
+			  name: '',
+			  birthday: '',
+			  desc: '',
+			  contact: ''
 			}, function(error){
 				if(error){
 					console.log(error);
