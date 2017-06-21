@@ -46,11 +46,7 @@ var router = express.Router();
 			*/
 			var newUser = refUser.push({
 			  id_thirdAuth: req.body.id_thirdAuth,
-			  first_login: true,
-			  name: '',
-			  birthday: '',
-			  desc: '',
-			  contact: ''
+			  first_login: true
 			}, function(error){
 				if(error){
 					console.log(error);
@@ -82,11 +78,12 @@ var router = express.Router();
 			res.setHeader('Access-Control-Allow-Origin', '*');
 
 			console.log('UPDATE USER');
+			console.log(req.body)
 
 			var db = firebase.database();
 			var refUser = db.ref("user/" + req.params.id);
 
-			refUser.update({
+			/*refUser.update({
 			  name: req.body.name,
 			  birthday: req.body.birthday,
 			  desc: req.body.desc,
@@ -98,7 +95,7 @@ var router = express.Router();
 				} else {
 					res.status(200).send();
 				}
-			});
+			});*/
 		});
 
 	// [ROUTE]
