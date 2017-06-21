@@ -83,19 +83,21 @@ var router = express.Router();
 			var db = firebase.database();
 			var refUser = db.ref("user/" + req.params.id);
 
-			/*refUser.update({
-			  name: req.body.name,
-			  birthday: req.body.birthday,
-			  desc: req.body.desc,
-			  contact: req.body.contact
-			}, function(error){
+			var objToUpdt = {
+				name: req.body.name ? req.body.name : '',
+				birthday: req.body.birthday ? req.body.birthday : '',
+				desc: req.body.desc ? req.body.desc : '',
+				contact: req.body.contact ? req.body.contact : ''
+			}
+			
+			refUser.update(objToUpdt, function(error){
 				if(error){
 					console.log(error);
 					res.status(406).send();
 				} else {
 					res.status(200).send();
 				}
-			});*/
+			});
 		});
 
 	// [ROUTE]
