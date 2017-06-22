@@ -20,9 +20,16 @@ var router = express.Router();
 		var db = firebase.database();
 		var refUserToken = db.ref("user_token/" + token);
 
+		console.log('url: ' + 'user_token/' + token)
+
 		// Reference user_token
 		db.ref('user_token/' + token).once('value').then(function(snapshot) {
-			callback(snapshot.val().id_user);
+			console.log('achou' + snapshot)
+			if(snapshot.val()) {
+				callback(snapshot.val().id_user);	
+			}
+			
+			callback(null);
   		});
 	}
 
@@ -149,12 +156,13 @@ var router = express.Router();
 		.get(function(req, res) {
 
 			console.log('Start: GET ALL OCCASIONS');
-			console.log(req.headers);
+
+			console.log(req.headers)
 
 			// Get a database reference to our occasions
 			var db = firebase.database();
 
-			validateToken(req.headers.api_token, function(idUser){
+			validateToken(req.headers.authorization, function(idUser){
 				// If idUser is valid then the token was found
 				if(idUser) {
 

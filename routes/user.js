@@ -69,7 +69,57 @@ var router = express.Router();
 					res.status(406).send(null);
 				}
 			})
-		});
+		})
+
+		.get(function(req, res) {
+
+			// Get query string parameter values
+			var name = req.query.name;
+			var limit = req.query.limit;
+
+			// Get a database reference to users
+			var db = firebase.database();
+			var ref_users = db.ref("user");
+
+			// Attach an asynchronous callback to read the data at our posts reference
+			ref_users.once("value", function(listUser) {
+
+ 				if(listUser && listUser.val() !== null) {
+
+ 					// Check if it users query parameter to find by name
+ 					if(!name) {
+ 						res.status(200).send(listUser);
+ 					}
+
+ 					console.log(listUser.val())
+ 					name = name.toLowerCase();
+ 					limit = Number(limit);
+ 					// Default limit for the list is 10 users to improve performance
+ 					limit = Number.isInteger(limit) && limit > 0 ? limit : 10;
+ 					var listUsersFound = [limit]; 
+
+ 					// Find user in the list
+ 					for(var idUser in listUser.val()) {
+ 						// If the user' name start with the name searched then add to a list
+ 						if(listUser.val()[idUser].name.toLowerCase().startsWith(name)) {
+ 							// Check if list is not full by checking the value of last item
+ 							if(!listUsersFound[listUsersFound.length - 1]) {
+ 								listUsersFound.push(listUser.val()[idUser]);
+ 							}
+ 						}
+					}
+
+					res.status(200).send(listUsersFound);
+				}
+				else {
+					res.status(200).send(false);
+				}
+
+			}, function (errorObject) {
+			  console.log("The read failed: " + errorObject.code);
+			  res.status(200).send(false);
+			});
+		})
 
 	//ROUTE
 	router.route('/user/:id')
