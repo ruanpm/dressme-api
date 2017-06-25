@@ -87,37 +87,44 @@ var router = express.Router();
  				if(listUser && listUser.val() !== null) {
 
  					// Check if it users query parameter to find by name
- 					if(!name) {
- 						res.status(200).send(listUser);
- 					}
+ 					if(!name || typeof name === undefined) {
+ 						res.status(200).send(JSON.stringify(listUser.val()));
+ 					} else {
+	 					name = name.toLowerCase();
+	 					limit = Number(limit);
 
- 					console.log(listUser.val())
- 					name = name.toLowerCase();
- 					limit = Number(limit);
- 					// Default limit for the list is 10 users to improve performance
- 					limit = Number.isInteger(limit) && limit > 0 ? limit : 10;
- 					var listUsersFound = [limit]; 
+	 					// Default limit for the list is 10 users to improve performance
+	 					limit = Number.isInteger(limit) && limit > 0 ? limit : 10;
+	 					var listUsersFound = []; 
 
- 					// Find user in the list
- 					for(var idUser in listUser.val()) {
- 						// If the user' name start with the name searched then add to a list
- 						if(listUser.val()[idUser].name.toLowerCase().startsWith(name)) {
- 							// Check if list is not full by checking the value of last item
- 							if(!listUsersFound[listUsersFound.length - 1]) {
- 								listUsersFound.push(listUser.val()[idUser]);
- 							}
- 						}
+	 					// Find user in the list
+	 					for(var idUser in listUser.val()) {
+
+	 						if(listUser.val()[idUser].name !== undefined) {
+
+		 						// If the user' name start with the name searched then add to a list
+		 						if(listUser.val()[idUser].name.toLowerCase().startsWith(name)) {
+		 							
+		 							// Check if list is not full by checking the value of last item
+		 							if(listUsersFound.length <= limit) {
+		 								listUser.val()[idUser].id = idUser;
+		 								var userFound = listUser.val()[idUser];
+		 								userFound.id = idUser;
+		 								listUsersFound.push(userFound);
+		 							}
+		 						}
+	 						}
+						}
+
+						res.status(200).send(JSON.stringify(listUsersFound));
 					}
-
-					res.status(200).send(listUsersFound);
 				}
 				else {
-					res.status(200).send(false);
+					res.status(200).send(null);
 				}
 
-			}, function (errorObject) {
-			  console.log("The read failed: " + errorObject.code);
-			  res.status(200).send(false);
+			}, function (error) {
+			 	res.status(200).send(false);
 			});
 		})
 
@@ -128,7 +135,6 @@ var router = express.Router();
 			res.setHeader('Access-Control-Allow-Origin', '*');
 
 			console.log('UPDATE USER');
-			console.log(req.body)
 
 			var db = firebase.database();
 			var refUser = db.ref("user/" + req.params.id);
@@ -148,6 +154,23 @@ var router = express.Router();
 					res.status(200).send();
 				}
 			});
+		});
+
+	//ROUTE
+	router.route('/user/follow/:id')
+		.put(function(req, res) {
+
+			res.setHeader('Access-Control-Allow-Origin', '*');
+
+			console.log('FOLLOW USER');
+			console.log(req.body)
+
+			var db = firebase.database();
+			var refUser = db.ref('user/' + req.body.id_user);
+			var refFollowing = refUser.child('following/' + req.params.id);
+			
+			refFollowing.setValue(true);
+			res.status(200).send();
 		});
 
 	// [ROUTE]
