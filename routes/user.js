@@ -72,7 +72,6 @@ var router = express.Router();
 		})
 
 		.get(function(req, res) {
-
 			// Get query string parameter values
 			var name = req.query.name;
 			var limit = req.query.limit;
@@ -95,28 +94,34 @@ var router = express.Router();
 
 	 					// Default limit for the list is 10 users to improve performance
 	 					limit = Number.isInteger(limit) && limit > 0 ? limit : 10;
-	 					var listUsersFound = []; 
+	 					var listUsersFound = [];
 
-	 					// Find user in the list
-	 					for(var idUser in listUser.val()) {
+	 					// blind iteration
+						Object.keys(listUser.val()).forEach(function(idUser) {
+  							var user = listUser.val()[idUser];
 
-	 						if(listUser.val()[idUser].name !== undefined) {
+	 						if(user.name !== undefined) {
+
+	 							console.log(user.name)
+	 							console.log(name)
 
 		 						// If the user' name start with the name searched then add to a list
-		 						if(listUser.val()[idUser].name.toLowerCase().startsWith(name)) {
+		 						if(user.name.toLowerCase().startsWith(name)) {
 		 							
 		 							// Check if list is not full by checking the value of last item
 		 							if(listUsersFound.length <= limit) {
-		 								listUser.val()[idUser].id = idUser;
-		 								var userFound = listUser.val()[idUser];
+		 								user.id = idUser;
+		 								var userFound = user;
 		 								userFound.id = idUser;
+
 		 								listUsersFound.push(userFound);
 		 							}
 		 						}
 	 						}
-						}
+						});
 
-						res.status(200).send(JSON.stringify(listUsersFound));
+						// Send response back
+		 				res.status(200).send(JSON.stringify(listUsersFound));	
 					}
 				}
 				else {
@@ -167,9 +172,9 @@ var router = express.Router();
 
 			var db = firebase.database();
 			var refUser = db.ref('user/' + req.body.id_user);
-			var refFollowing = refUser.child('following/' + req.params.id);
+			var refFollowing = refUser.child('following').child(req.params.id);
 			
-			refFollowing.setValue(true);
+			refFollowing.set(true);
 			res.status(200).send();
 		});
 
