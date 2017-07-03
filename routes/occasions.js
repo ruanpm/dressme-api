@@ -73,7 +73,8 @@ var router = express.Router();
 			  location: req.body.location,
 			  date: req.body.date,
 			  time: req.body.time,
-			  url: req.body.url
+			  url: req.body.url,
+			  id_user: req.body.id_user
 			}, function(error) {
 				if(error) {
 
@@ -153,11 +154,9 @@ var router = express.Router();
 		})
 
 		//GET ALL OCCASIONS
-		.get(function(req, res) {
+		.get(function(req, res) { // GET OCCASIONS POSTS FROM FOLLOWING
 
-			console.log('Start: GET ALL OCCASIONS');
-
-			console.log(req.headers)
+			console.log('GET OCCASIONS POSTS FROM FOLLOWING');
 
 			// Get a database reference to our occasions
 			var db = firebase.database();
@@ -165,9 +164,19 @@ var router = express.Router();
 			validateToken(req.headers.authorization, function(idUser){
 				// If idUser is valid then the token was found
 				if(idUser) {
-
-					// TODO - Get occasions from the users that the user follow
-					
+					// First get the users the logged user is following
+					var refFollowing = db.ref('user/' + req.headers.authorization + '/following');
+					refFollowing.once('value', function(listFollowing){
+						
+						if(listFollowing && listFollowing.val()) {
+	
+ 							for(var idUser in listFollowing.val()) {
+ 								// Get occasions posts from each user
+ 								// TODO - Get just the latest occasions posts
+ 								var refOccasions
+ 							}
+						}
+					});
 
 					// Get all occasions linked to the user
 					db.ref('occasions').once('value', function(response) {

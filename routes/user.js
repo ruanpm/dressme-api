@@ -135,11 +135,53 @@ var router = express.Router();
 
 	//ROUTE
 	router.route('/user/:id')
-		.put(function(req, res) {
+		.get(function(req, res) { // Get specific user
+			console.log('GET SPECIFIC USER')
 
-			res.setHeader('Access-Control-Allow-Origin', '*');
+			// Get query string parameter values
+			var idUser = req.params.id;
+			var idLoggedUser = req.query.id_logged_user;
 
+			// Get a database reference to users
+			var db = firebase.database();
+			var refUsers = db.ref("user/" + idUser);
+
+			// Attach an asynchronous callback to read the data at our posts reference
+			refUsers.once("value", function(user) {
+ 				if(user && user.val() !== null) {
+
+ 					// Set the user id that does not come along with the result
+ 					var userFound = user.val();
+ 					userFound.id = idUser;
+
+ 					console.log('user/' + idLoggedUser + '/following/' + idUser)
+ 					
+ 					// If it receives idLoggedUser then check if the logged user has fallowed the user
+ 					if(idLoggedUser) {
+ 						refFollowing = db.ref('user/' + idLoggedUser + '/following/' + idUser)
+ 						refFollowing.once("value", function(following) {
+ 							if(following && following.val()) {
+ 								res.status(200).send(JSON.stringify({ user: userFound, following_status: following }));
+ 							} else {
+ 								res.status(200).send(JSON.stringify( {user: userFound, following_status: false } ));
+ 							}
+ 						});
+ 					} else {
+		 				res.status(200).send(JSON.stringify( {user: userFound} ));
+		 			}
+				}
+				else {
+					res.status(200).send(null);
+				}
+
+			}, function (error) {
+			 	res.status(200).send(false);
+			});
+		})
+
+		.put(function(req, res) { // Update especific User
 			console.log('UPDATE USER');
+			res.setHeader('Access-Control-Allow-Origin', '*');
 
 			var db = firebase.database();
 			var refUser = db.ref("user/" + req.params.id);
@@ -164,17 +206,29 @@ var router = express.Router();
 	//ROUTE
 	router.route('/user/follow/:id')
 		.put(function(req, res) {
-
 			res.setHeader('Access-Control-Allow-Origin', '*');
-
 			console.log('FOLLOW USER');
-			console.log(req.body)
 
 			var db = firebase.database();
 			var refUser = db.ref('user/' + req.body.id_user);
 			var refFollowing = refUser.child('following').child(req.params.id);
 			
 			refFollowing.set(true);
+			res.status(200).send();
+		});
+
+	//ROUTE
+	router.route('/user/unfollow/:id')
+		.put(function(req, res) {
+			res.setHeader('Access-Control-Allow-Origin', '*');
+			console.log('UNFOLLOW USER');
+
+			var db = firebase.database();
+			var refUser = db.ref('user/' + req.body.id_user);
+			var refFollowing = refUser.child('following').child(req.params.id);
+			
+			refFollowing.remove();
+			
 			res.status(200).send();
 		});
 
