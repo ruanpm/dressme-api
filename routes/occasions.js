@@ -24,12 +24,15 @@ var router = express.Router();
 
 		// Reference user_token
 		db.ref('user_token/' + token).once('value').then(function(snapshot) {
-			console.log('achou' + snapshot)
-			if(snapshot.val()) {
-				callback(snapshot.val().id_user);	
-			}
+			 console.log(snapshot.val().id_user)
 			
-			callback(null);
+			if(snapshot.val()) {
+				console.log('lelele')
+				console.log('achou: ' + JSON.stringify(snapshot.val()))
+				callback(snapshot.val().id_user);	
+			} else {
+				callback(null);
+			}
   		});
 	}
 
@@ -161,35 +164,57 @@ var router = express.Router();
 			// Get a database reference to our occasions
 			var db = firebase.database();
 
-			validateToken(req.headers.authorization, function(idUser){
+			validateToken(req.headers.authorization, function(idLoggedUser) {
+			
 				// If idUser is valid then the token was found
-				if(idUser) {
+				if(idLoggedUser && idLoggedUser !== undefined) {
+
 					// First get the users the logged user is following
-					var refFollowing = db.ref('user/' + req.headers.authorization + '/following');
-					refFollowing.once('value', function(listFollowing){
-						
+					var refFollowing = db.ref('user/' + idLoggedUser + '/following');
+					refFollowing.once('value', function(listFollowing) {
+
 						if(listFollowing && listFollowing.val()) {
-	
+							var resListOccasions = [];
+
+							// Iterate over users the logged one is following
  							for(var idUser in listFollowing.val()) {
+
  								// Get occasions posts from each user
  								// TODO - Get just the latest occasions posts
- 								var refOccasions
+ 								var counter = 0; // Used to check the end
+ 								var refOccasions = db.ref('occasions');
+
+ 								refOccasions.once('value', function(listOccasion) {
+
+ 									if(listOccasion && listOccasion.val()) {
+
+ 										for(var idOccasion in listOccasion.val()) {
+
+ 											console.log('HAHAHAH')
+
+ 											if(listOccasion.val()[idOccasion].id_user === idUser) {
+ 												resListOccasions.push(listOccasion.val()[idOccasion]);
+ 												counter++;
+
+ 												console.log('PRE HELL')
+
+ 												// Send response when reach 10 items or before when reaches the end
+ 												if(counter === Object.keys(listOccasion.val()).length || counter === 10) {
+ 													console.log('FINAL')
+ 													res.status(200).json(JSON.parse(resListOccasions));
+ 												}
+ 											} else {
+ 												counter++;
+ 											}
+ 										}
+
+ 										res.status(200).json(null);
+ 									}
+ 								});
  							}
+						} else {
+							res.status(200).send(null);
 						}
-					});
-
-					// Get all occasions linked to the user
-					db.ref('occasions').once('value', function(response) {
-
-					  if(response.val() === null){
-					  	res.json(JSON.parse('{}'));
-					  }
-					  else {
-					  	res.json(response.val());
-					  }
-
-					}, function (errorObject) {
-					  console.log('The read failed: ' + errorObject.code);
 					});
 				}
 			})
