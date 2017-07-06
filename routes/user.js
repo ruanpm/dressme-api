@@ -161,7 +161,7 @@ var router = express.Router();
  						refFollowing = db.ref('user/' + idLoggedUser + '/following/' + idUser)
  						refFollowing.once("value", function(following) {
  							if(following && following.val()) {
- 								res.status(200).send(JSON.stringify({ user: userFound, following_status: following }));
+ 								res.status(200).send(JSON.stringify({ user: userFound, following_status: following.val() }));
  							} else {
  								res.status(200).send(JSON.stringify( {user: userFound, following_status: false } ));
  							}

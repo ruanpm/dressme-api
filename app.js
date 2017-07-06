@@ -3,7 +3,8 @@ var bodyParser = require('body-parser');
 //var mongoose = require('mongoose')
 var occasions = require('./routes/occasions');
 var upload = require('./routes/upload'); 
-var user = require('./routes/user'); 
+var user = require('./routes/user');
+var look = require('./routes/look'); 
 var app = express();
 
 //connect to our database
@@ -34,5 +35,6 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use('/api', occasions);
 app.use('/api', upload);
 app.use('/api', user);
+app.use('/api', look);
 
 module.exports = app;

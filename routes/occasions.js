@@ -186,34 +186,37 @@ var router = express.Router();
 
  								refOccasions.once('value', function(listOccasion) {
 
- 									if(listOccasion && listOccasion.val()) {
+ 									if(listOccasion && listOccasion.val() && Object.keys(listOccasion.val()).length > 0) {
 
  										for(var idOccasion in listOccasion.val()) {
+ 											counter++;
+ 											var resOccasion = listOccasion.val()[idOccasion];
 
- 											console.log('HAHAHAH')
+ 											if(resOccasion.id_user === idUser) {
+ 												resOccasion.id = idOccasion;
+ 												resListOccasions.push(resOccasion);
 
- 											if(listOccasion.val()[idOccasion].id_user === idUser) {
- 												resListOccasions.push(listOccasion.val()[idOccasion]);
- 												counter++;
-
- 												console.log('PRE HELL')
-
+ 												console.log('DEBUGANDO')
+ 												console.log(resOccasion)
+ 												console.log(resListOccasions)
+ 												
  												// Send response when reach 10 items or before when reaches the end
  												if(counter === Object.keys(listOccasion.val()).length || counter === 10) {
- 													console.log('FINAL')
- 													res.status(200).json(JSON.parse(resListOccasions));
+ 													res.status(200).send(JSON.stringify(resListOccasions));
  												}
  											} else {
- 												counter++;
+ 												if(counter === Object.keys(listOccasion.val()).length || counter === 10) {
+ 													res.status(200).json(null);
+ 												}
  											}
  										}
-
+ 									} else {
  										res.status(200).json(null);
  									}
  								});
  							}
 						} else {
-							res.status(200).send(null);
+							res.status(200).json(null);
 						}
 					});
 				}
