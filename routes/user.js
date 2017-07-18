@@ -145,10 +145,15 @@ var router = express.Router();
 			// Get a database reference to users
 			var db = firebase.database();
 			var refUsers = db.ref("user/" + idUser);
+			console.log('BOMB')
+			console.log('user/' + idUser)
 
 			// Attach an asynchronous callback to read the data at our posts reference
 			refUsers.once("value", function(user) {
+				console.log('DEBUG MASTEr')
  				if(user && user.val() !== null) {
+
+ 					console.log('DEBUG USER 1')
 
  					// Set the user id that does not come along with the result
  					var userFound = user.val();
@@ -158,8 +163,13 @@ var router = express.Router();
  					
  					// If it receives idLoggedUser then check if the logged user has fallowed the user
  					if(idLoggedUser) {
+
+
+ 					console.log('DEBUG USER 2')
+
  						refFollowing = db.ref('user/' + idLoggedUser + '/following/' + idUser)
  						refFollowing.once("value", function(following) {
+ 							console.log('this the user 1: ' + userFound)
  							if(following && following.val()) {
  								res.status(200).send(JSON.stringify({ user: userFound, following_status: following.val() }));
  							} else {
@@ -167,6 +177,7 @@ var router = express.Router();
  							}
  						});
  					} else {
+ 						console.log('this the user 2: ' + userFound)
 		 				res.status(200).send(JSON.stringify( {user: userFound} ));
 		 			}
 				}
@@ -211,6 +222,7 @@ var router = express.Router();
 
 			var db = firebase.database();
 			var refUser = db.ref('user/' + req.body.id_user);
+			console.log('user/' + req.params.id)
 			var refFollowing = refUser.child('following').child(req.params.id);
 			
 			refFollowing.set(true);
@@ -289,22 +301,27 @@ var router = express.Router();
 
 			// Get a database reference to users
 			var db = firebase.database();
-			var ref_users = db.ref("user");
+			var ref_users = db.ref('user');
+			var ref_user = null;
 
 			// Attach an asynchronous callback to read the data at our posts reference
-			ref_users.once("value", function(listUser) {
+			ref_users.once('value', function(listUser) {
 
- 				if(listUser && listUser.val() !== null) {
+				if(listUser && listUser.val() !== null) {
 
  					// Find user in the list
  					for(var idUser in listUser.val()) {
 
  						// Verifica se id do usuario auth do firebase foi encontrado
-						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
+ 						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
+ 							ref_user = db.ref("user/" + idUser);
+ 							break;
+ 						}
+ 					}
 
-							var ref_user = db.ref("user/" + idUser);
+ 					if(ref_user) {
 
-							ref_user.once('value', function(result) {
+ 						ref_user.once('value', function(result) {
 
 								// If it is not first login then respond false
 								// otherwise update the attr and respond true
@@ -320,27 +337,26 @@ var router = express.Router();
 								}
 
 								// Generates a TOKEN for the user
-								generateToken(idUser, function(code, token){
+								generateToken(idUser, function(code, token) {
+
 									if(token) {
 										objResponse.user_token = token;
 										objResponse.user_id = idUser;
-										res.status(200).send(objResponse);
+										
+										return res.status(200).send(objResponse);
 									} else {
-										res.status(406).send(null);
+										return res.status(406).send(null);
 									}
 								})
 							});
-						}
-					}
-				}
-				else {
-					res.status(200).send(false);
-				}
-
-			}, function (errorObject) {
-			  console.log("The read failed: " + errorObject.code);
-			  res.status(200).send(false);
-			});
+ 					}
+ 				} else {
+ 					res.status(200).send(false);
+ 				}
+ 			}, function (errorObject) {
+ 				console.log("The read failed: " + errorObject.code);
+ 				res.status(200).send(false);
+ 			});
 		})
 
 

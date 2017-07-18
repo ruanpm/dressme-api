@@ -24,11 +24,7 @@ var router = express.Router();
 
 		// Reference user_token
 		db.ref('user_token/' + token).once('value').then(function(snapshot) {
-			 console.log(snapshot.val().id_user)
-			
 			if(snapshot.val()) {
-				console.log('lelele')
-				console.log('achou: ' + JSON.stringify(snapshot.val()))
 				callback(snapshot.val().id_user);	
 			} else {
 				callback(null);
@@ -51,7 +47,6 @@ var router = express.Router();
 
 			//If it came from Win App then normalize looks
 			if(req.body.win_app !== null && req.body.win_app == true){
-				console.log('HANDLE IT');
 				var normalizedListLooks = [];
 				req.body.looks = JSON.parse(req.body.looks);
 
@@ -66,8 +61,6 @@ var router = express.Router();
 			var listRespLooks = [];
 			var countItLooks = 0;
 
-			console.log('CHECKPOINT 1');
-
 			//New Occasion
 			var newOccasion = ref.push({
 			  name: req.body.name,
@@ -75,31 +68,22 @@ var router = express.Router();
 			  mood: req.body.mood,
 			  location: req.body.location,
 			  date: req.body.date,
+			  date_expire: req.body.date_expire,
 			  time: req.body.time,
 			  url: req.body.url,
 			  id_user: req.body.id_user
 			}, function(error) {
 				if(error) {
-
-					console.log('CHECKPOINT 1.5');
-
 					console.log(error);
 					return res.status(500).send('Internal Server Error');
 				}
 				else {
-
-					console.log('CHECKPOINT 2');
-
 					//This is the just created occasion id
 					idNewOccasion = newOccasion.key;
-					console.log("NEW OCCASION ID: " + idNewOccasion);
 
 					//If could create the Occasion 
 					//add new Looks inside it
 					var looks = req.body.looks;
-
-					console.log('LOOKS TO BE SAVED');
-					console.log(looks);
 
 					//If it has looks then add along
 					if(looks && looks.length) {
@@ -119,13 +103,11 @@ var router = express.Router();
 									res.status(500).send('Internal Server Error');
 
 									if(countItLooks === looks.length){
-										console.log('LOG1')
 										//return the new occasion id and its looks ids
 										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK", "idForUpload": newLook.idForUpload});	
 									}
 								}
 								else{
-									console.log('DEU CERTO AQUi')
 									//console.log(look);
 									countItLooks++;
 
@@ -133,7 +115,6 @@ var router = express.Router();
 									listRespLooks.push({ "id": newLook.key, "picture": look.picture, "idForUpload": look.idForUpload});
 
 									if(countItLooks === looks.length){
-										console.log('LOG3')
 										//return the new occasion id and its looks ids
 										res.json({"id": idNewOccasion, "looks": listRespLooks, "msg": "OK"}).send();
 									}
@@ -165,6 +146,8 @@ var router = express.Router();
 			var db = firebase.database();
 
 			validateToken(req.headers.authorization, function(idLoggedUser) {
+
+				console.log('CHARLIE 1')
 			
 				// If idUser is valid then the token was found
 				if(idLoggedUser && idLoggedUser !== undefined) {
@@ -197,8 +180,8 @@ var router = express.Router();
  												resListOccasions.push(resOccasion);
 
  												console.log('DEBUGANDO')
- 												console.log(resOccasion)
- 												console.log(resListOccasions)
+ 												//console.log(resOccasion)
+ 												//console.log(resListOccasions)
  												
  												// Send response when reach 10 items or before when reaches the end
  												if(counter === Object.keys(listOccasion.val()).length || counter === 10) {
@@ -332,6 +315,64 @@ var router = express.Router();
 				}
 			});
 	});
+
+		//ROUTE
+	router.route('/occasion/list/active')
+
+		.get(function(req, res) { // Get active occasions
+
+			console.log('GET ACTIVE OCCASIONS');
+			//res.stauts(200).json(null);
+
+			// Get a database reference to our posts
+			var db = firebase.database();
+			var refOccasions = db.ref('occasions');
+
+			console.log('caraleo')
+
+			refOccasions.once('value', function(listOccasion) {
+
+				console.log('llalalal')
+
+						if(listOccasion && listOccasion.val()) {
+							var resListOccasion = [];
+							var currentDateTime = new Date().getTime();
+							var idUser = req.query.id_user;
+							var count = 0;
+
+							console.log('AQUII')
+
+							if(Object.keys(listOccasion.val()).length > 0) {
+
+								// Iterate over users the logged one is following
+	 							for(var idOccasion in listOccasion.val()) {
+	 								count++;
+	 								var occasion = listOccasion.val()[idOccasion];
+
+	 								console.log('AQUII1')
+
+	 								// Find the occasions that expiration date are under the current date
+	 								console.log('Current date: ' + currentDateTime)
+	 								console.log('Expire date: ' + occasion.date_expire)
+	 								if(idUser === occasion.id_user && currentDateTime <= occasion.date_expire) {
+	 									console.log('AQUII2')
+	 									resListOccasion.push(occasion);
+	 								}
+	 							}
+
+	 							if(resListOccasion.length === 0) {
+	 								resListOccasion = null;
+	 							}
+
+	 							console.log('mandaaa')
+	 							res.status(200).json(null);
+ 							} else {
+ 								console.log('should not be here')
+ 								res.status(200).send(null);
+ 							}
+ 						}
+ 					});			
+		})
 				
 
 module.exports = router;
