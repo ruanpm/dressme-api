@@ -162,6 +162,8 @@ var router = express.Router();
 							// Iterate over users the logged one is following
  							for(var idUser in listFollowing.val()) {
 
+ 								console.log('PAROU AQUI')
+
  								// Get occasions posts from each user
  								// TODO - Get just the latest occasions posts
  								var counter = 0; // Used to check the end
@@ -178,27 +180,28 @@ var router = express.Router();
  											if(resOccasion.id_user === idUser) {
  												resOccasion.id = idOccasion;
  												resListOccasions.push(resOccasion);
-
- 												console.log('DEBUGANDO')
- 												//console.log(resOccasion)
- 												//console.log(resListOccasions)
  												
  												// Send response when reach 10 items or before when reaches the end
- 												if(counter === Object.keys(listOccasion.val()).length || counter === 10) {
- 													res.status(200).send(JSON.stringify(resListOccasions));
+ 												if(counter === (Object.keys(listOccasion.val()).length - 1) || counter === 9) {
+ 													console.log('TERMINANDO')
+ 													console.log(resListOccasions)
+ 													return res.status(200).send(JSON.stringify(resListOccasions));
  												}
  											} else {
- 												if(counter === Object.keys(listOccasion.val()).length || counter === 10) {
+ 												console.log('TERMINANDO 2')
+ 												if (counter === Object.keys(listOccasion.val()).length || counter === 10) {
  													res.status(200).json(null);
  												}
  											}
  										}
  									} else {
+ 										console.log('TERMINANDO  3')
  										res.status(200).json(null);
  									}
  								});
  							}
 						} else {
+							console.log('TERMINANDO 4')
 							res.status(200).json(null);
 						}
 					});
@@ -322,40 +325,35 @@ var router = express.Router();
 		.get(function(req, res) { // Get active occasions
 
 			console.log('GET ACTIVE OCCASIONS');
-			//res.stauts(200).json(null);
 
 			// Get a database reference to our posts
 			var db = firebase.database();
 			var refOccasions = db.ref('occasions');
 
-			console.log('caraleo')
-
 			refOccasions.once('value', function(listOccasion) {
 
-				console.log('llalalal')
+				if(listOccasion && listOccasion.val()) {
+					var resListOccasion = [];
+					var currentDateTime = new Date().getTime();
+					var idUser = req.query.id_user;
+					var count = 0;
 
-						if(listOccasion && listOccasion.val()) {
-							var resListOccasion = [];
-							var currentDateTime = new Date().getTime();
-							var idUser = req.query.id_user;
-							var count = 0;
-
-							console.log('AQUII')
-
-							if(Object.keys(listOccasion.val()).length > 0) {
+					if(Object.keys(listOccasion.val()).length > 0) {
 
 								// Iterate over users the logged one is following
-	 							for(var idOccasion in listOccasion.val()) {
-	 								count++;
-	 								var occasion = listOccasion.val()[idOccasion];
-
-	 								console.log('AQUII1')
+								for(var idOccasion in listOccasion.val()) {
+									count++;
+									var occasion = listOccasion.val()[idOccasion];
+									occasion.id = idOccasion;
 
 	 								// Find the occasions that expiration date are under the current date
 	 								console.log('Current date: ' + currentDateTime)
 	 								console.log('Expire date: ' + occasion.date_expire)
+	 								console.log(currentDateTime <= occasion.date_expire)
+
+	 								console.log(idUser)
+	 								console.log(occasion.id_user)
 	 								if(idUser === occasion.id_user && currentDateTime <= occasion.date_expire) {
-	 									console.log('AQUII2')
 	 									resListOccasion.push(occasion);
 	 								}
 	 							}
@@ -364,14 +362,17 @@ var router = express.Router();
 	 								resListOccasion = null;
 	 							}
 
-	 							console.log('mandaaa')
-	 							res.status(200).json(null);
- 							} else {
- 								console.log('should not be here')
- 								res.status(200).send(null);
- 							}
- 						}
- 					});			
+	 							console.log('This is the response:')
+	 							console.log(resListOccasion)
+	 							
+	 							res.status(200).json(resListOccasion);
+	 				} else {
+	 					res.status(200).send(null);
+	 				}
+	 			} else {
+	 				res.status(200).send(null);
+	 			}
+	 		});			
 		})
 				
 
