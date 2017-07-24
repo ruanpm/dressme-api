@@ -91,11 +91,12 @@ var router = express.Router();
 						looks.forEach(function(look) {
 							//console.log(look);
 							var newLook = newOccasion.child("looks").push({
-							  	like: look.like,
-							  	dislike: look.dislike,
+							  	like: 0,
+							  	dislike: 0,
 							  	desc: look.desc,
 							  	picture: look.picture,
-								idForUpload: look.idForUpload
+								idForUpload: look.idForUpload,
+								comments: ''
 							}, function(error){
 								if(error){
 									countItLooks++;
@@ -147,8 +148,6 @@ var router = express.Router();
 
 			validateToken(req.headers.authorization, function(idLoggedUser) {
 
-				console.log('CHARLIE 1')
-			
 				// If idUser is valid then the token was found
 				if(idLoggedUser && idLoggedUser !== undefined) {
 
@@ -161,8 +160,6 @@ var router = express.Router();
 
 							// Iterate over users the logged one is following
  							for(var idUser in listFollowing.val()) {
-
- 								console.log('PAROU AQUI')
 
  								// Get occasions posts from each user
  								// TODO - Get just the latest occasions posts
@@ -180,28 +177,22 @@ var router = express.Router();
  											if(resOccasion.id_user === idUser) {
  												resOccasion.id = idOccasion;
  												resListOccasions.push(resOccasion);
- 												
- 												// Send response when reach 10 items or before when reaches the end
- 												if(counter === (Object.keys(listOccasion.val()).length - 1) || counter === 9) {
- 													console.log('TERMINANDO')
- 													console.log(resListOccasions)
- 													return res.status(200).send(JSON.stringify(resListOccasions));
- 												}
- 											} else {
- 												console.log('TERMINANDO 2')
- 												if (counter === Object.keys(listOccasion.val()).length || counter === 10) {
- 													res.status(200).json(null);
- 												}
+ 											}
+
+ 											// Send response when reach 10 items or before when reaches the end
+ 											if(counter === 9) {
+ 												break;
  											}
  										}
+
+ 										return res.status(200).send(JSON.stringify(resListOccasions));
+
  									} else {
- 										console.log('TERMINANDO  3')
  										res.status(200).json(null);
  									}
  								});
  							}
 						} else {
-							console.log('TERMINANDO 4')
 							res.status(200).json(null);
 						}
 					});
@@ -347,12 +338,6 @@ var router = express.Router();
 									occasion.id = idOccasion;
 
 	 								// Find the occasions that expiration date are under the current date
-	 								console.log('Current date: ' + currentDateTime)
-	 								console.log('Expire date: ' + occasion.date_expire)
-	 								console.log(currentDateTime <= occasion.date_expire)
-
-	 								console.log(idUser)
-	 								console.log(occasion.id_user)
 	 								if(idUser === occasion.id_user && currentDateTime <= occasion.date_expire) {
 	 									resListOccasion.push(occasion);
 	 								}
@@ -361,9 +346,6 @@ var router = express.Router();
 	 							if(resListOccasion.length === 0) {
 	 								resListOccasion = null;
 	 							}
-
-	 							console.log('This is the response:')
-	 							console.log(resListOccasion)
 	 							
 	 							res.status(200).json(resListOccasion);
 	 				} else {
@@ -373,7 +355,53 @@ var router = express.Router();
 	 				res.status(200).send(null);
 	 			}
 	 		});			
-		})
+		});
+
+	//ROUTE
+	router.route('/occasion/list/inative')
+
+		.get(function(req, res) { // Get previous/inactive occasions
+
+			console.log('GET PREVIOUS/INATIVE OCCASIONS');
+
+			// Get a database reference to our posts
+			var db = firebase.database();
+			var refOccasions = db.ref('occasions');
+
+			refOccasions.once('value', function(listOccasion) {
+
+				if(listOccasion && listOccasion.val()) {
+					var resListOccasion = [];
+					var currentDateTime = new Date().getTime();
+					var idUser = req.query.id_user;
+					var count = 0;
+
+					if(Object.keys(listOccasion.val()).length > 0) {
+
+								// Iterate over users the logged one is following
+								for(var idOccasion in listOccasion.val()) {
+									count++;
+									var occasion = listOccasion.val()[idOccasion];
+									occasion.id = idOccasion;
+
+	 								if(idUser === occasion.id_user && occasion.date_expire < currentDateTime ) {
+	 									resListOccasion.push(occasion);
+	 								}
+	 							}
+
+	 							if(resListOccasion.length === 0) {
+	 								resListOccasion = null;
+	 							}
+	 							
+	 							res.status(200).json(resListOccasion);
+	 				} else {
+	 					res.status(200).send(null);
+	 				}
+	 			} else {
+	 				res.status(200).send(null);
+	 			}
+	 		});			
+		});	
 				
 
 module.exports = router;

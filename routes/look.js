@@ -131,6 +131,49 @@ var router = express.Router();
 		});
 
 
+	//ROUTE
+	router.route('/look/count/like/:id_occasion/:id_look')
+		.get(function(req, res) {
+			console.log('GET COUNT LIKES');
+		
+			var db = firebase.database();
+			var refReaction = db.ref('occasions/' + req.params.id_occasion + '/looks/' + req.params.id_look + '/like');
+
+			refReaction.once('value', function(count) {
+				res.status(200).send({data: count.val() ? count.val() : 0});
+			});
+		});
+
+	//ROUTE
+	router.route('/look/count/dislike/:id_occasion/:id_look')
+		.get(function(req, res) {
+			console.log('GET COUNT DISLIKES');
+
+			var db = firebase.database();
+			var refReaction = db.ref('occasions/' + req.params.id_occasion + '/looks/' + req.params.id_look + '/dislike');
+
+			refReaction.once('value', function(count) {
+				res.status(200).send({data: count.val() ? count.val() : 0});
+			});
+		});
+
+	//ROUTE
+	router.route('/look/count/comment/:id_occasion/:id_look')
+		.get(function(req, res) {
+
+			console.log('GET COUNT COMMENTS');
+
+			var db = firebase.database();
+			var refReaction = db.ref('occasions/' + req.params.id_occasion + '/looks/' + req.params.id_look + '/comments');
+
+			refReaction.once('value', function(comments) {
+				if(comments.val() && comments.val() !== '') {
+					res.status(200).send({data: comments.numChildren()});
+				} else {
+					res.status(200).send({data: 0});
+				}
+			});
+		});
 
 
 module.exports = router;
