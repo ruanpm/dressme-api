@@ -163,7 +163,7 @@ var router = express.Router();
 
  								// Get occasions posts from each user
  								// TODO - Get just the latest occasions posts
- 								var counter = 0; // Used to check the end
+ 								var counter = 0; // Used to check if reached 9 occasions as response
  								var refOccasions = db.ref('occasions');
 
  								refOccasions.once('value', function(listOccasion) {
@@ -171,11 +171,12 @@ var router = express.Router();
  									if(listOccasion && listOccasion.val() && Object.keys(listOccasion.val()).length > 0) {
 
  										for(var idOccasion in listOccasion.val()) {
- 											counter++;
  											var resOccasion = listOccasion.val()[idOccasion];
 
  											if(resOccasion.id_user === idUser) {
+ 												counter++;
  												resOccasion.id = idOccasion;
+ 												resOccasion.name_user = '';
  												resListOccasions.push(resOccasion);
  											}
 
@@ -185,8 +186,29 @@ var router = express.Router();
  											}
  										}
 
- 										return res.status(200).send(JSON.stringify(resListOccasions));
+ 										if(resListOccasions.length === 0) {
+ 											return res.status(200).json(null);
+ 										}
 
+ 										// Iteration the get the user name
+ 										var counter2 = 0;
+ 										for(let i = 0; i < resListOccasions.length; i++) {
+ 											//var cloneOfA = JSON.parse(JSON.stringify(resListOccasions[i])); 
+	 										var refFollowing = db.ref('user/' + resListOccasions[i].id_user + '/name');
+	 										refFollowing.once('value', function(userName) {
+	 											counter2++;
+	 											console.log(userName.val())
+	 											console.log(resListOccasions[i])
+	 											if(resListOccasions[i] !== undefined) {
+	 												resListOccasions[i].name_user = userName.val();
+	 											}
+	 											console.log('contador: ' + counter)
+	 											if(counter2 === resListOccasions.length) {
+	 												console.log(resListOccasions)
+	 												return res.status(200).send(JSON.stringify(resListOccasions));
+	 											} 
+	 										});
+ 										}
  									} else {
  										res.status(200).json(null);
  									}
