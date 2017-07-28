@@ -15,7 +15,8 @@
     "firebase-admin": "^4.0.4",
     "gm": "^1.23.0",
     "google-cloud": "^0.45.1",
-    "httpclient": "^0.1.0"
+    "httpclient": "^0.1.0",
+    "requestify": "^0.2.5"
   },
   "engines": {
     "node": "4.4.2"

@@ -1,19 +1,7 @@
-//var Movie = require('../models/movie');
 var express = require('express');
 var firebase = require('../config/firebaseapi/myfirebase')
 
 var router = express.Router();
-
-//TEST - used to allow access from diferent IP locations
-// router.use(function(req, res, next) {
-
-// 	console.log('CONFIGURANDO HEADERS AQUI!!!!!')
-
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS');
-//   res.header('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-//   next();
-// });
 
 	// Check if the user token exists
 	function validateToken(token, callback) {

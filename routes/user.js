@@ -1,4 +1,3 @@
-//var Movie = require('../models/movie');
 var express = require('express');
 var firebase = require('../config/firebaseapi/myfirebase')
 var crypto =  require('crypto');

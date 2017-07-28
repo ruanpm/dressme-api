@@ -5,6 +5,7 @@ var occasions = require('./routes/occasions');
 var upload = require('./routes/upload'); 
 var user = require('./routes/user');
 var look = require('./routes/look'); 
+var recommendation = require('./routes/recommendation'); 
 var app = express();
 
 //connect to our database
@@ -33,5 +34,6 @@ app.use('/api', occasions);
 app.use('/api', upload);
 app.use('/api', user);
 app.use('/api', look);
+app.use('/api', recommendation);
 
 module.exports = app;
