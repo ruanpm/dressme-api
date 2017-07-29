@@ -128,6 +128,7 @@ var router = express.Router();
 
 		//GET ALL OCCASIONS
 		.get(function(req, res) { // GET OCCASIONS POSTS FROM FOLLOWING
+			"use strict"; // Dot not remove it, required since i am using 'let' inside this function
 
 			console.log('GET OCCASIONS POSTS FROM FOLLOWING');
 
