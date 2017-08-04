@@ -32,8 +32,9 @@ var router = express.Router();
 
 				// If idUser is valid then the token was found
 				if(idLoggedUser && idLoggedUser !== undefined) {
-					var city = req.query.city;
+					var zipcode = req.query.zipcode;
 					var country = req.query.country;
+
 
 					/*http.request('http://api.openweathermap.org/data/2.5/forecast/daily?q=Montenegro,br&cnt=16&APPID=38e36555d1b5e9d5d44c11e9cb9c4595', function(response) {
 					    console.log(response)
@@ -41,7 +42,7 @@ var router = express.Router();
 					    res.status(500).send(null);
 					}).end();*/
 
-					requestify.get('http://api.openweathermap.org/data/2.5/forecast/daily?q=Montenegro,br&cnt=16&units=metric&APPID=38e36555d1b5e9d5d44c11e9cb9c4595').then(function(response) {
+					requestify.get('http://api.openweathermap.org/data/2.5/forecast/daily?zip=' + zipcode + ',' + country + '&cnt=16&units=metric&APPID=38e36555d1b5e9d5d44c11e9cb9c4595').then(function(response) {
 						// Get the response body
 						console.log(response.getBody())
 						 res.status(200).json(response.getBody());
