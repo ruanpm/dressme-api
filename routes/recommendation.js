@@ -35,12 +35,7 @@ var router = express.Router();
 					var zipcode = req.query.zipcode;
 					var country = req.query.country;
 
-
-					/*http.request('http://api.openweathermap.org/data/2.5/forecast/daily?q=Montenegro,br&cnt=16&APPID=38e36555d1b5e9d5d44c11e9cb9c4595', function(response) {
-					    console.log(response)
-					}).on('error', function(e) {
-					    res.status(500).send(null);
-					}).end();*/
+					console.log('http://api.openweathermap.org/data/2.5/forecast/daily?zip=' + zipcode + ',' + country + '&cnt=16&units=metric&APPID=38e36555d1b5e9d5d44c11e9cb9c4595')
 
 					requestify.get('http://api.openweathermap.org/data/2.5/forecast/daily?zip=' + zipcode + ',' + country + '&cnt=16&units=metric&APPID=38e36555d1b5e9d5d44c11e9cb9c4595').then(function(response) {
 						// Get the response body

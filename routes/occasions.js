@@ -30,8 +30,6 @@ var router = express.Router();
 
 			var db = firebase.database();
 			var ref = db.ref("occasions");
- 
-			console.log(req.body);
 
 			//If it came from Win App then normalize looks
 			if(req.body.win_app !== null && req.body.win_app == true){
@@ -186,14 +184,12 @@ var router = express.Router();
 	 										var refFollowing = db.ref('user/' + resListOccasions[i].id_user + '/name');
 	 										refFollowing.once('value', function(userName) {
 	 											counter2++;
-	 											console.log(userName.val())
-	 											console.log(resListOccasions[i])
+	 											
 	 											if(resListOccasions[i] !== undefined) {
 	 												resListOccasions[i].name_user = userName.val();
 	 											}
-	 											console.log('contador: ' + counter)
+	 											
 	 											if(counter2 === resListOccasions.length) {
-	 												console.log(resListOccasions)
 	 												return res.status(200).send(JSON.stringify(resListOccasions));
 	 											} 
 	 										});
@@ -306,8 +302,6 @@ var router = express.Router();
 			var db = firebase.database();
 			var ref = db.ref("occasions/<idoccasion>/looks/<idlook>");
  
-			console.log(req.body);
-
 			var newReaction = ref.child("reactions").push({
 				user:    req.body.userid,
 				like:    req.body.like,
@@ -403,12 +397,17 @@ var router = express.Router();
 	 							if(resListOccasion.length === 0) {
 	 								resListOccasion = null;
 	 							}
+
+	 							console.log('here1')
+	 							console.log(resListOccasion)
 	 							
 	 							res.status(200).json(resListOccasion);
 	 				} else {
+	 					console.log('here2')
 	 					res.status(200).send(null);
 	 				}
 	 			} else {
+	 				console.log('here3')
 	 				res.status(200).send(null);
 	 			}
 	 		});			
