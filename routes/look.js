@@ -177,6 +177,8 @@ var router = express.Router();
 		//ROUTE
 	router.route('/look/reaction/:id_occasion')
 		.get(function(req, res) {
+			"use strict"; // Dot not remove it, required since i am using 'let' inside this function
+			
 			console.log('GET LOOKS REACTIONS');
 			
 			var idOccasion = req.params.id_occasion;
