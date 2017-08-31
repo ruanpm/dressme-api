@@ -174,5 +174,52 @@ var router = express.Router();
 			});
 		});
 
+		//ROUTE
+	router.route('/look/reaction/:id_occasion')
+		.get(function(req, res) {
+			console.log('GET LOOKS REACTIONS');
+			
+			var idOccasion = req.params.id_occasion;
+			var listIdsLooks = req.query.listIdsLooks;
+			var idUser = req.query.id_user;
+			var result = {
+							id_occasion: idOccasion,
+							looks: []
+						};
+
+			var db = firebase.database();
+
+			console.log(listIdsLooks)
+
+			if(listIdsLooks) {
+				listIdsLooks = listIdsLooks.split(',');
+
+				for(let i = 0; i < listIdsLooks.length; i++) {
+					var refLookReaction = db.ref('user_look_reaction/' +  listIdsLooks[i] + '/' + idUser + '/like');
+							
+					refLookReaction.once('value', function(data) {
+						console.log('CHECK IT')
+						//console.log(listIdsLooks[i])
+						//console.log(data.val())
+
+						result.looks.push({id: listIdsLooks[i], like: data.val()});
+
+						console.log('caaaara')
+						console.log(result)
+						//res.status(200).json(JSON.stringify(result));
+
+						if(i === listIdsLooks.length - 1) {
+							console.log('drop by here')
+							res.status(200).json(JSON.stringify(result));
+						}
+					}, function(error) {
+						res.status(406).send(null);		
+					});
+				}
+			} else {
+				res.status(200).send(null);
+			}
+		});
+
 
 module.exports = router;
