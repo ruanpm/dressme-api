@@ -34,8 +34,6 @@ var router = express.Router();
 			res.setHeader('Access-Control-Allow-Origin', '*');
 
 			console.log('NEW USER');
-			console.log(req)
-
 			var db = firebase.database();
 			var refUser = db.ref("user");
 
@@ -53,26 +51,20 @@ var router = express.Router();
 				}
 			});
 
-			var responseObj = {
-				token: '',
-				user_id: ''
-			}
-
-			console.log('OLHA AQUI 1')
-			console.log(newUser.getKey())
-
 			// Generates a TOKEN for the user
 			generateToken(newUser.getKey(), function(code, token){
 				if(token) {
 
-					console.log('OLHA AQUI 2')
-			console.log(newUser.getKey())
+					var responseObj = {
+						token: '',
+						user_id: ''
+					}
 
 					responseObj.token = token;
 					responseObj.user_id = newUser.getKey();
-					res.status(200).send(responseObj);
+					return res.status(200).send(responseObj);
 				} else {
-					res.status(406).send(null);
+					return res.status(406).send(null);
 				}
 			})
 		})
