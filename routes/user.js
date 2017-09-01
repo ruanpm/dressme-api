@@ -58,9 +58,16 @@ var router = express.Router();
 				user_id: ''
 			}
 
+			console.log('OLHA AQUI 1')
+			console.log(newUser)
+
 			// Generates a TOKEN for the user
 			generateToken(newUser.getKey(), function(code, token){
 				if(token) {
+
+					console.log('OLHA AQUI 2')
+			console.log(newUser)
+
 					responseObj.token = token;
 					responseObj.user_id = newUser.getKey();
 					res.status(200).send(responseObj);
