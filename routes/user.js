@@ -62,7 +62,7 @@ var router = express.Router();
 
 					responseObj.token = token;
 					responseObj.user_id = newUser.getKey();
-					return res.status(200).send(responseObj);
+					return res.status(200).json(responseObj);
 				} else {
 					return res.status(406).send(null);
 				}
@@ -312,6 +312,7 @@ var router = express.Router();
 
  						// Verifica se id do usuario auth do firebase foi encontrado
  						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
+
  							ref_user = db.ref("user/" + idUser);
  							break;
  						}
