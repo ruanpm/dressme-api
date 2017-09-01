@@ -62,9 +62,9 @@ var router = express.Router();
 
 					responseObj.token = token;
 					responseObj.user_id = newUser.getKey();
-					return res.status(200).send(JSON.stringify(responseObj));
+					res.status(200).json(JSON.stringify(responseObj));
 				} else {
-					return res.status(406).send(null);
+					res.status(406).send(null);
 				}
 			})
 		})
