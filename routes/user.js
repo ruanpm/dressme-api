@@ -137,7 +137,7 @@ var router = express.Router();
 			}, function (error) {
 			 	res.status(200).send(false);
 			});
-		})
+		});
 
 	//ROUTE
 	router.route('/user/:id')
@@ -363,7 +363,7 @@ var router = express.Router();
  				console.log("The read failed: " + errorObject.code);
  				res.status(200).send(false);
  			});
-		})
+		});
 
 
 module.exports = router;
