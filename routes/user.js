@@ -37,7 +37,7 @@ var router = express.Router();
 			var db = firebase.database();
 			var refUser = db.ref("user");
 			var id_thirdAuth = req.body.id_thirdAuth;
-			
+
 			var userExists = false;
 			var userKey = null;
 
@@ -84,7 +84,7 @@ var router = express.Router();
 						}
 
 						responseObj.token = token;
-						responseObj.user_id = newUser.getKey();
+						responseObj.user_id = userKey;
 						res.status(200).json(JSON.stringify(responseObj));
 					} else {
 						res.status(406).send(null);
