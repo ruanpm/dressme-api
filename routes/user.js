@@ -50,7 +50,7 @@ var router = express.Router();
  					for(var idUser in listUser.val()) {
 
  						// Verifica se id do usuario auth do firebase foi encontrado
- 						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
+ 						if(id_thirdAuth === listUser.val()[idUser].id_thirdAuth) {
  							userExists = true;
  							userKey = idUser;
  						}
