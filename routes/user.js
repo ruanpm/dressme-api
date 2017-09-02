@@ -88,7 +88,7 @@ var router = express.Router();
 						res.status(406).send(null);
 					}
 				});
- 			}
+ 			});
 		})
 
 		.get(function(req, res) {
