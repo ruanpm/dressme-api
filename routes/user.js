@@ -32,41 +32,63 @@ var router = express.Router();
 		.post(function(req, res) {
 
 			res.setHeader('Access-Control-Allow-Origin', '*');
-
 			console.log('NEW USER');
 			var db = firebase.database();
 			var refUser = db.ref("user");
+			var id_thirdAuth = req.body.id_thirdAuth;
+			var userExists = false;
+			var userKey = null;
 
-			/*
-			* New User.
-			* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
-			*/
-			var newUser = refUser.push({
-			  id_thirdAuth: req.body.id_thirdAuth,
-			  first_login: true
-			}, function(error){
-				if(error){
-					console.log(error);
-					res.status(406).send();
-				}
-			});
+			//First check if the users already exists
+			ref_users.once('value', function(listUser) {
 
-			// Generates a TOKEN for the user
-			generateToken(newUser.getKey(), function(code, token){
-				if(token) {
+				if(listUser && listUser.val() !== null) {
 
-					var responseObj = {
-						token: '',
-						user_id: ''
+ 					// Find user in the list
+ 					for(var idUser in listUser.val()) {
+
+ 						// Verifica se id do usuario auth do firebase foi encontrado
+ 						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
+ 							userExists = true;
+ 							userKey = idUser;
+ 						}
+ 					}
+ 				}
+
+ 				/*
+				* New User.
+				* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
+				*/
+ 				if(!userExists) {
+					var newUser = refUser.push({
+						id_thirdAuth: id_thirdAuth,
+						first_login: true
+					}, function(error){
+						if(error){
+							console.log(error);
+							res.status(406).send();
+						}
+					});
+
+					userKey = newUser.getKey();
+ 				}
+
+ 				// Generates a TOKEN for the user
+				generateToken(userKey, function(code, token) {
+					if(token) {
+						var responseObj = {
+							token: '',
+							user_id: ''
+						}
+
+						responseObj.token = token;
+						responseObj.user_id = newUser.getKey();
+						res.status(200).json(JSON.stringify(responseObj));
+					} else {
+						res.status(406).send(null);
 					}
-
-					responseObj.token = token;
-					responseObj.user_id = newUser.getKey();
-					res.status(200).json(JSON.stringify(responseObj));
-				} else {
-					res.status(406).send(null);
-				}
-			})
+				});
+ 			}
 		})
 
 		.get(function(req, res) {
