@@ -33,14 +33,16 @@ var router = express.Router();
 
 			res.setHeader('Access-Control-Allow-Origin', '*');
 			console.log('NEW USER');
+
 			var db = firebase.database();
 			var refUser = db.ref("user");
 			var id_thirdAuth = req.body.id_thirdAuth;
+			
 			var userExists = false;
 			var userKey = null;
 
 			//First check if the users already exists
-			ref_users.once('value', function(listUser) {
+			refUser.once('value', function(listUser) {
 
 				if(listUser && listUser.val() !== null) {
 
