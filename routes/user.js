@@ -336,13 +336,16 @@ var router = express.Router();
 
  						// Verifica se id do usuario auth do firebase foi encontrado
  						if(idUserFireFind === listUser.val()[idUser].id_thirdAuth) {
-
  							ref_user = db.ref("user/" + idUser);
  							break;
  						}
  					}
 
  					if(ref_user) {
+ 						//WARNING!!!
+ 						//**UNDO THIS FOR PRESENTATION**
+ 						//Set by default the user Layla to be the one followed by each new user
+						ref_user.child('following').child('-KoFoAL5fzxqctjslNj9').set(true);
 
  						ref_user.once('value', function(result) {
 
