@@ -345,7 +345,7 @@ var router = express.Router();
  						//WARNING!!!
  						//**UNDO THIS FOR PRESENTATION**
  						//Set by default the user Layla to be the one followed by each new user
-						ref_user.child('following').child('-KoFoAL5fzxqctjslNj9').set(true);
+						//ref_user.child('following').child('-KoFoAL5fzxqctjslNj9').set(true);
 
  						ref_user.once('value', function(result) {
 
