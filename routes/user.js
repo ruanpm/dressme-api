@@ -250,7 +250,7 @@ var router = express.Router();
 			var refFollowing = refUser.child('following').child(req.params.id);
 			
 			refFollowing.set(true);
-			res.status(200).send();
+			return res.status(200).send();
 		});
 
 	//ROUTE
@@ -265,7 +265,7 @@ var router = express.Router();
 			
 			refFollowing.remove();
 			
-			res.status(200).send();
+			return res.status(200).send();
 		});
 
 	// [ROUTE]
