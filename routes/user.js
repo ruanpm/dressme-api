@@ -241,6 +241,8 @@ var router = express.Router();
 		.put(function(req, res) {
 			res.setHeader('Access-Control-Allow-Origin', '*');
 			console.log('FOLLOW USER');
+			console.log('User to follow: ' + req.params.id)
+			console.log('My user: ' + req.body.id_user)
 
 			var db = firebase.database();
 			var refUser = db.ref('user/' + req.body.id_user);
