@@ -195,12 +195,12 @@ var router = express.Router();
 	 										});
  										}
  									} else {
- 										res.status(200).json(null);
+ 										return res.status(200).json(null);
  									}
  								});
  							}
 						} else {
-							res.status(200).json(null);
+							return res.status(200).json(null);
 						}
 					});
 				}
