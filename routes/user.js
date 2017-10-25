@@ -61,12 +61,16 @@ var router = express.Router();
 				* New User.
 				* thirdAuth can be any authentication provider(E.i.: Firebase Auth, Facebook)
 				*/
+				console.log('EITAAA')
  				if(!userExists) {
+ 					console.log('VALORES')
+ 					console.log(id_thirdAuth)
 					var newUser = refUser.push({
 						id_thirdAuth: id_thirdAuth,
 						first_login: true
 					}, function(error){
 						if(error){
+							console.log('DEU PAU AQUI')
 							console.log(error);
 							res.status(406).send();
 						}
