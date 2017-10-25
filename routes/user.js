@@ -12,15 +12,19 @@ var router = express.Router();
 		// Create User Token and send response with this generated token
 		var db = firebase.database();
 		var refUserToken = db.ref("user_token/" + token);
+		console.log('OLA OLA OLA')
+		console.log("user_token/" + token)
 		refUserToken.set({
 						id_user: idUser
 					}, function(error){
 						if(error){
+							console.log('SCREWED1')
 							console.log(error);
 							//res.status(406).send();
 							callback(406, null);
 						}
 						else{
+							console.log('DEU BOM')
 							//res.status(200).send(token);
 							callback(200, token);
 						}
