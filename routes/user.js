@@ -33,6 +33,7 @@ var router = express.Router();
 
 			res.setHeader('Access-Control-Allow-Origin', '*');
 			console.log('NEW USER');
+			console.log('id_thirdAuth is: ' + req.body.id_thirdAuth);
 
 			var db = firebase.database();
 			var refUser = db.ref("user");
