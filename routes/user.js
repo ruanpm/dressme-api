@@ -94,6 +94,8 @@ var router = express.Router();
 
 						responseObj.token = token;
 						responseObj.user_id = userKey;
+						console.log('ISSO É MANDADO:')
+						console.log(JSON.stringify(responseObj))
 						res.status(200).json(JSON.stringify(responseObj));
 					} else {
 						res.status(406).send(null);
